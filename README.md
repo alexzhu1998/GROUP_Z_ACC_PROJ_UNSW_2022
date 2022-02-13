@@ -14,7 +14,7 @@
 8. **Subdirectory**: Browse through the computer and make sure you have the right subdirectory for this cloned repository and click "Create Project".
 9. NOW YOU ARE DONE!
 
-# Instructions for using Git
+# Helpful commands/buttons to use Git
 1. **Pull**: The Pull function allows git to retrieve what your teammates have coded and make changes directly to your file system. If you haven't started making changes, always pull (Blue Down Arrow button under the Git window in `RStudio`) first to make sure your version of the repo is up to date.
 
 2. **Commit**: To tell github you are planning on saving your changes into the github repository, you need to store the info into your local git. This is known as a **commit**. To do this, you first save the files, and go to the top right corner and tick all the blank boxes, and click commit. Sometimes, you will run into a merge conflict, because your version of the local repo is different to the online repo, possibly due to you not regularly pulling from Github. When that time comes, just let me know. So please click Pull regularly!
