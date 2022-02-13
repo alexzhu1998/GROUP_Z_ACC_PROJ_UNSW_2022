@@ -6,11 +6,12 @@
 # Instructions for setting up Github and linking it to RStudio Projects
 1. **Make Github Account**: Create a Github account.
 2. **Install Git**: Go to https://git-scm.com/ to install git. Please make sure you know where the git folder is installed.
-3. **Set Up SSH Key**: Go to RStudio: Tools -> Global Options -> Git/SVN. Tick "Enable version control...". Put your git executable file path into the space for "Git executable". Create a new SSH RSA key (If you haven't already). Click "View public key" and copy the whole key.
+3. **Set Up SSH Key**: Go to RStudio: Tools -> Global Options -> Git/SVN. Tick "Enable version control...". Put your git executable file path into the space for "Git executable". Create a new SSH RSA key (If you haven't already). Click "View public key" and copy the whole key. It should look like this:
+<img width="592" alt="image" src="https://user-images.githubusercontent.com/55743621/153742960-f26d2bfc-8fcd-4e5c-9269-91e8d16e4cff.png">
 4. **Put your SSH Key in Github**: _(If you have set up an SSH key in Github, go to next step)_ Go to your Github account, click the top right icon, go to Settings-> "SSH and GPG keys". Click "New SSH Key", and paste the key you have just copied from RStudio and save.
 5. **Get your Personal Access Token (PAT)**: Now on Github, go to your Settings -> "Developer Settings" -> "Personal access token". Click "Generate New Token", set the time period to 90 days, give it a name, and tick everything. COPY/SAVE THIS TOKEN.
 6. **Putting things together on RStudio**: Going back to RStudio, Go to a directory where you would like to clone this project, click "File" -> "New Project" -> "Version Control" -> "Git"
-7. **Pasting your Git clone links along with PAT**: Under Repository URL, enter the cloned URL in this format (Please replace the stuff in angled brackets with the appropriate letters/characters): "https://<YOUR_GITHUB_USERNAME>:<YOUR_PAT>@github.com/alexzhu1998/GROUP_Z_ACC_PROJ_UNSW_2022.git"
+7. **Pasting your Git clone links along with PAT**: Under Repository URL, enter the Github Clone URL in this format (Please replace the stuff in angled brackets with the appropriate letters/characters): "https://<YOUR_GITHUB_USERNAME>:<YOUR_PAT>@github.com/alexzhu1998/GROUP_Z_ACC_PROJ_UNSW_2022.git"
 8. **Subdirectory**: Browse through the computer and make sure you have the right subdirectory for this cloned repository and click "Create Project".
 9. NOW YOU ARE DONE!
 
