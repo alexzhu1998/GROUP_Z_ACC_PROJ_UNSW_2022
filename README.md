@@ -1,3 +1,3 @@
-# UNSW_2022_ACC
+# GROUP_Z_ACC_PROJ_UNSW_2022
 
 ## UNSW Group Assignment for ACTL4001
