@@ -24,4 +24,4 @@
 <img width="999" alt="image" src="https://user-images.githubusercontent.com/55743621/153742401-6cfeb1cb-7fd4-42df-9f9d-0142c836481c.png">
 
 4. **Branches**: Sometimes, you might want to work on your own experimental code but you still want to push it to the repository. You can do this with branches, which can be thought of as a new chain of code split from the original code. You can make a new branch by clicking the left button encircled by the red lines, and switch between branches by clicking on the drop down on the right circle. You can also merge your changes with the main codebase, just let me know if you want to merge.
-Screen Shot 2022-02-13 at 5.52.11 pm<img width="439" alt="image" src="https://user-images.githubusercontent.com/55743621/153742534-d73aca95-1764-4fe5-b982-c20f2d635874.png">
+<img width="439" alt="image" src="https://user-images.githubusercontent.com/55743621/153742534-d73aca95-1764-4fe5-b982-c20f2d635874.png">
