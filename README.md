@@ -14,7 +14,12 @@
 6. **Putting things together on RStudio**: Going back to RStudio, Go to a directory where you would like to clone this project, click "File" -> "New Project" -> "Version Control" -> "Git"
 7. **Pasting your Git clone links along with PAT**: Under Repository URL, enter the Github Clone URL in this format (Please replace the stuff in the angle brackets (including the angle brackets themselves) with the appropriate letters/characters): "https://<YOUR_GITHUB_USERNAME>:<YOUR_PAT>@github.com/alexzhu1998/GROUP_Z_ACC_PROJ_UNSW_2022.git"
 8. **Subdirectory**: Browse through the computer and make sure you have the right subdirectory for this cloned repository and click "Create Project".
-9. NOW YOU ARE DONE!
+9. **Setting up your git identity** If you have installed git for the first time, you need to do this step. You need to tell git who you are by typing your name and email in the terminal or command prompt as follows:
+```
+git config --global user.email "<YOUR_GITHUB_EMAIL>"
+git config --global user.name "<YOUR_GITHUB_USERNAME>"
+```
+10. NOW YOU ARE DONE!
 
 # Helpful commands/buttons to use Git
 1. **Pull**: The Pull function allows git to retrieve what your teammates have coded and make changes directly to your file system. If you haven't started making changes, always pull (Blue Down Arrow button under the Git window in `RStudio`) first to make sure your version of the repo is up to date.
