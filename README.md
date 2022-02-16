@@ -12,7 +12,7 @@
 4. **Put your SSH Key in Github**: _(If you have set up an SSH key in Github, go to next step)_ Go to your Github account, click the top right icon, go to Settings-> "SSH and GPG keys". Click "New SSH Key", and paste the key you have just copied from RStudio and save.
 5. **Get your Personal Access Token (PAT)**: Now on Github, go to your Settings -> "Developer Settings" -> "Personal access token". Click "Generate New Token", set the time period to 90 days, give it a name, and tick everything. COPY/SAVE THIS TOKEN.
 6. **Putting things together on RStudio**: Going back to RStudio, Go to a directory where you would like to clone this project, click "File" -> "New Project" -> "Version Control" -> "Git"
-7. **Pasting your Git clone links along with PAT**: Under Repository URL, enter the Github Clone URL in this format (Please replace the stuff in angled brackets with the appropriate letters/characters): "https://<YOUR_GITHUB_USERNAME>:<YOUR_PAT>@github.com/alexzhu1998/GROUP_Z_ACC_PROJ_UNSW_2022.git"
+7. **Pasting your Git clone links along with PAT**: Under Repository URL, enter the Github Clone URL in this format (Please replace the stuff in the angle brackets (including the angle brackets themselves) with the appropriate letters/characters): "https://<YOUR_GITHUB_USERNAME>:<YOUR_PAT>@github.com/alexzhu1998/GROUP_Z_ACC_PROJ_UNSW_2022.git"
 8. **Subdirectory**: Browse through the computer and make sure you have the right subdirectory for this cloned repository and click "Create Project".
 9. NOW YOU ARE DONE!
 
