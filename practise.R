@@ -4,3 +4,4 @@
 Alex <- 1
 Annie <- 100/100
 Aidan <- 1*1
+Matt <- Aidan*Aidan
