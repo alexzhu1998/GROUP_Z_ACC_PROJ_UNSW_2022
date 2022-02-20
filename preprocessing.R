@@ -41,7 +41,7 @@ library(ggplot2)
  # fit models - TBC
     # west and east =  linear regression
     
-    # central = ARIMA(0,1,1)
+    # central = ARIMA(0,1,1) doesn't work yet
     pop_central <- ts(ECON_pop$`Central Rarita`)
     fit_pop_central <- arima(pop_central, c(0, 1, 1))
     pred <- predict(fit_pop_central, n.ahead = 10)
