@@ -26,6 +26,8 @@ PLAYER_league_pass <- read_excel("data/player.xlsx",sheet = "League Passing",ran
 PLAYER_league_def <- read_excel("data/player.xlsx",sheet = "League Defense",range= "B12:AG5566")
 PLAYER_league_goal <- read_excel("data/player.xlsx",sheet = "League Goalkeeping",range= "B12:AB425")
 
+PLAYER_tourn_res <- read_excel("data/player.xlsx",sheet = "Tournament Results",range= "B11:C27")
+PLAYER_tourn_res2 <- read_excel("data/player.xlsx",sheet = "Tournament Results",range= "E11:F35")
 PLAYER_tourn_shoot <- read_excel("data/player.xlsx",sheet = "Tournament Shooting",range= "B12:Z2027")
 PLAYER_tourn_pass <- read_excel("data/player.xlsx",sheet = "Tournament Passing",range= "B12:AE500")
 PLAYER_tourn_def <- read_excel("data/player.xlsx",sheet = "Tournament Defense",range= "B12:AF500")
@@ -33,3 +35,5 @@ PLAYER_tourn_goal <- read_excel("data/player.xlsx",sheet = "Tournament Goalkeepi
 
 PLAYER_salary2020 <- read_excel("data/player.xlsx",sheet = "2020 Salaries",range= "B12:G2744")
 PLAYER_salary2021 <- read_excel("data/player.xlsx",sheet = "2021 Salaries",range= "B12:G2834")
+
+save.image(file="all_raw_data.RData") 

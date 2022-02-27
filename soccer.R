@@ -1,4 +1,4 @@
-load("all_data.RData")
+load("all_raw_data.RData")
 
 
 ##### Load Packages #####
@@ -39,8 +39,28 @@ PLAYER_league_non_goal <- merge(x = PLAYER_league_non_goal,
                                 by = overlapping_cols,
                                 all = T)
 
+Year <- rep(2021,count(PLAYER_salary2021))
+a <- cbind(Year,PLAYER_salary2021)
+Year <- rep(2020,count(PLAYER_salary2020))
+PLAYER_salary <- rbind(a,cbind(Year,PLAYER_salary2020))
+names(PLAYER_salary)[names(PLAYER_salary) == "Player Name"] <- "Player"
 
 
+# setdiff(unique(select(PLAYER_salary, c("Player Name","Year","League"))),
+overlapping_cols2 <- c("Player","Year","League","Squad")
+setdiff(unique(select(PLAYER_salary, overlapping_cols2)),
+        unique(select(PLAYER_league_non_goal, overlapping_cols2)))
+
+PLAYER_league_non_goal_salary <- merge(
+    x = PLAYER_league_non_goal,
+    y = PLAYER_salary,
+    by = overlapping_cols2)
+
+
+data_to_remove <- c(dats,"PLAYER_league_non_goal", "PLAYER_salary", "PLAYER_salary2020", "PLAYER_salary2021")
+rm(list = list(data_to_remove)[[1]])
+
+save(PLAYER_league_non_goal_salary, file = "merged_league_non_goal_sal.RData")
 ##### Examining Data #####
 
 
