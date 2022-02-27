@@ -1,4 +1,4 @@
-load("all_raw_data.RData")
+load("data/all_raw_data.RData")
 
 
 ##### Load Packages #####
@@ -28,7 +28,7 @@ for (j in (1:length(dats))) {
 setdiff(unique(select(eval(parse(text= dats[1])),vec[1:5])),unique(select(eval(parse(text = dats[2])), vec[1:5])))
 setdiff(unique(select(eval(parse(text= dats[1])),vec[1:5])),unique(select(eval(parse(text = dats[3])), vec[1:5])))
 
-
+### Merging Data ###
 overlapping_cols <- c("Player","Nation","Pos", "Squad","Age", "Year", "Born", "League")
 PLAYER_league_non_goal <- merge(x = eval(parse(text = dats[1])),
                                 y = eval(parse(text = dats[2])), 
@@ -38,6 +38,9 @@ PLAYER_league_non_goal <- merge(x = PLAYER_league_non_goal,
                                 y = eval(parse(text = dats[3])),
                                 by = overlapping_cols,
                                 all = T)
+
+# A check to see if the merged data rows are increased
+stopifnot(count(PLAYER_league_non_goal) == count(PLAYER_league_def))
 
 Year <- rep(2021,count(PLAYER_salary2021))
 a <- cbind(Year,PLAYER_salary2021)
@@ -60,7 +63,7 @@ PLAYER_league_non_goal_salary <- merge(
 # data_to_remove <- c(dats,"PLAYER_league_non_goal", "PLAYER_salary", "PLAYER_salary2020", "PLAYER_salary2021")
 # rm(list = list(data_to_remove)[[1]])
 
-save(PLAYER_league_non_goal_salary, file = "merged_league_non_goal_sal.RData")
+save(PLAYER_league_non_goal_salary, file = "data/merged_league_non_goal_sal.RData")
 
 
 
@@ -86,7 +89,7 @@ for (j in (1:length(dats2))) {
 setdiff(unique(select(eval(parse(text= dats2[1])),vec[1])),unique(select(eval(parse(text = dats2[2])), vec[1])))
 setdiff(unique(select(eval(parse(text= dats2[1])),vec[1])),unique(select(eval(parse(text = dats2[3])), vec[1])))
 
-##### Examining Data #####
+##### Merging Data #####
 
 overlapping_cols2 = c(vec)
 PLAYER_tourn_non_goal <- merge(x = eval(parse(text = dats2[1])),
@@ -98,14 +101,15 @@ PLAYER_tourn_non_goal <- merge(x = PLAYER_tourn_non_goal,
                                 by = overlapping_cols2,
                                 all = T)
 
-count(PLAYER_tourn_non_goal)
+# A check to see if the merged data rows are increased
+stopifnot(count(PLAYER_tourn_non_goal) == count(PLAYER_tourn_def))
 
 
 #### Remove Useless Data #####
 # data_to_remove <- c(dats2,"PLAYER_tourn_shoot")
 # rm(list = list(data_to_remove)[[1]])
 
-save(PLAYER_tourn_non_goal, file = "merged_tourn_non_goal_sal.RData")
+save(PLAYER_tourn_non_goal, file = "data/merged_tourn_non_goal_sal.RData")
 ##### Join Data #####
 
 
