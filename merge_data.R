@@ -57,8 +57,8 @@ PLAYER_league_non_goal_salary <- merge(
     by = overlapping_cols2)
 
 
-data_to_remove <- c(dats,"PLAYER_league_non_goal", "PLAYER_salary", "PLAYER_salary2020", "PLAYER_salary2021")
-rm(list = list(data_to_remove)[[1]])
+# data_to_remove <- c(dats,"PLAYER_league_non_goal", "PLAYER_salary", "PLAYER_salary2020", "PLAYER_salary2021")
+# rm(list = list(data_to_remove)[[1]])
 
 save(PLAYER_league_non_goal_salary, file = "merged_league_non_goal_sal.RData")
 
@@ -66,7 +66,7 @@ save(PLAYER_league_non_goal_salary, file = "merged_league_non_goal_sal.RData")
 
 
 dats2 <- c("PLAYER_tourn_def","PLAYER_tourn_pass","PLAYER_tourn_shoot_2021")
-# vec = c("Player","Year","League","") # for some reason "Born" does not cover the whole set like "Age"
+vec = c("Player","Year","League", "Age", "Born")#,"Nation","Pos") # for some reason "Born" does not cover the whole set like "Age"
 mat = matrix(0,
              nrow = length(vec),
              ncol = length(dats2),
@@ -85,18 +85,25 @@ for (j in (1:length(dats2))) {
 # Checking if the sets are different - they are the exact same.
 setdiff(unique(select(eval(parse(text= dats2[1])),vec[1])),unique(select(eval(parse(text = dats2[2])), vec[1])))
 setdiff(unique(select(eval(parse(text= dats2[1])),vec[1])),unique(select(eval(parse(text = dats2[3])), vec[1])))
+
 ##### Examining Data #####
+
+overlapping_cols2 = c(vec)
 PLAYER_tourn_non_goal <- merge(x = eval(parse(text = dats2[1])),
                                 y = eval(parse(text = dats2[2])), 
-                                by = vec,
+                                by = overlapping_cols2,
                                 all = T)
 PLAYER_tourn_non_goal <- merge(x = PLAYER_tourn_non_goal,
                                 y = eval(parse(text = dats2[3])),
-                                by = vec,
+                                by = overlapping_cols2,
                                 all = T)
 
-data_to_remove <- c(dats2,"PLAYER_tourn_shoot")
-rm(list = list(data_to_remove)[[1]])
+count(PLAYER_tourn_non_goal)
+
+
+#### Remove Useless Data #####
+# data_to_remove <- c(dats2,"PLAYER_tourn_shoot")
+# rm(list = list(data_to_remove)[[1]])
 
 save(PLAYER_tourn_non_goal, file = "merged_tourn_non_goal_sal.RData")
 ##### Join Data #####
