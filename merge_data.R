@@ -63,7 +63,7 @@ PLAYER_league_non_goal_salary <- merge(
 # data_to_remove <- c(dats,"PLAYER_league_non_goal", "PLAYER_salary", "PLAYER_salary2020", "PLAYER_salary2021")
 # rm(list = list(data_to_remove)[[1]])
 
-save(PLAYER_league_non_goal_salary, file = "data/merged_league_non_goal_sal.RData")
+save(PLAYER_league_non_goal_salary,PLAYER_league_goal, file = "data/merged_league.RData")
 
 
 
@@ -109,7 +109,7 @@ stopifnot(count(PLAYER_tourn_non_goal) == count(PLAYER_tourn_def))
 # data_to_remove <- c(dats2,"PLAYER_tourn_shoot")
 # rm(list = list(data_to_remove)[[1]])
 
-save(PLAYER_tourn_non_goal, file = "data/merged_tourn_non_goal_sal.RData")
+save(PLAYER_tourn_goal,PLAYER_tourn_non_goal, file = "data/merged_tourn.RData")
 ##### Join Data #####
 
 
