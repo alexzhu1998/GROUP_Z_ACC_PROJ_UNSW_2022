@@ -1,4 +1,4 @@
-load("all_raw_data.RData")
+load("data/all_raw_data.RData")
 
 #### Libraries ####
 library(tidyverse)
