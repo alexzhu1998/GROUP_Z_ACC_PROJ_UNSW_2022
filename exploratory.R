@@ -81,7 +81,12 @@ df<- df %>% select(-c("Position", "Country"))
 
 
 
+mod <- glm(Annualized_Salary ~ .-Player-Nation, data = df)
+s <- summary(mod)
 
+coeff_table <- s$coefficients
+colnames(coeff_table)[4] <- "p_value"
+coeff_table[coeff_table[,"p_value"]<0.05,] 
 
 ## Correlation heatmap
 
