@@ -4,24 +4,26 @@ load("data/merged_tourn.RData")
 
 library(dplyr)
 df <- PLAYER_league_non_goal_salary
-colnames(df)
-colnames(df) <- gsub(" ", "_",colnames(df))
-colnames(df) <- gsub("%", "_per",colnames(df))
-colnames(df)
 
-vec_of_attr <- c("Total_Cmp_per", 
-                 "Short_Cmp_per", 
-                 "Medium_Cmp_per", 
-                 "Long_Cmp_per",
+colnames(df) <- gsub(" ","_", colnames(df))
+
+vec_of_attr <- c("Total_Cmp%", 
+                 "Short_Cmp%", 
+                 "Medium_Cmp%", 
+                 "Long_Cmp%",
                  "Performance_PK",
                  "Performance_PKatt",
                  "Tackles_TklW",
-                 "Pressures__per",
+                 "Pressures_%",
                  "Clr",
                  "Blocks_Blocks",
                  "Blocks_Sh",
                  "Blocks_ShSv",
-                 "Blocks_Pass")
+                 "Blocks_Pass",
+                 "Gls",
+                 "Standard_SoT%",
+                 "Standard_G/Sh",
+                 "Annualized_Salary")
 
 ## Took average of all 90s columns
 df$`90s_avg` <- rowMeans(df %>% select("90s","90s.x","90s.y")) * 90
@@ -31,53 +33,55 @@ df[vec_of_attr] <- df[vec_of_attr]/df$`90s_avg`
 
 
 
+nat <- df %>%
+    group_by(Nation) %>%
+    summarise(across(vec_of_attr,~mean(.x,na.rm=T)))
 
-## Standardised
 
-# 
-# str<- paste(paste0(vec_of_attr,' = mean(',vec_of_attr, ')'), collapse=",")
-# 
-# 
-# nation <- df %>% 
-#     group_by(Nation) %>%
-#     summarise(eval(parse(text = str)))
+l <- df %>%
+    group_by(League) %>%
+    summarise(across(vec_of_attr,~mean(.x,na.rm=T)))
 
-league <- df %>%
-    group_by(League)  %>%
-    summarise(Total_Cmp_per = mean(Total_Cmp_per,na.rm=T),
-              Short_Cmp_per = mean(Short_Cmp_per,na.rm=T),
-              Medium_Cmp_per = mean(Medium_Cmp_per,na.rm=T),
-              Long_Cmp_per = mean(Long_Cmp_per,na.rm=T),
-              Performance_PK = mean(Performance_PK,na.rm=T),
-              Performance_PKatt = mean(Performance_PKatt,na.rm=T),
-              Tackles_TklW = mean(Tackles_TklW,na.rm=T),
-              Pressures__per = mean(Pressures__per,na.rm=T),
-              Clr = mean(Clr,na.rm=T),
-              Blocks_Blocks = mean(Blocks_Blocks,na.rm=T),
-              Blocks_Sh = mean(Blocks_Sh,na.rm=T),
-              Blocks_ShSv = mean(Blocks_ShSv,na.rm=T),
-              Blocks_Pass = mean(Blocks_Pass,na.rm=T))
 
-nation <- df %>%
-    group_by(Nation)  %>%
-    summarise(Total_Cmp_per = mean(Total_Cmp_per,na.rm=T),
-              Short_Cmp_per = mean(Short_Cmp_per,na.rm=T),
-              Medium_Cmp_per = mean(Medium_Cmp_per,na.rm=T),
-              Long_Cmp_per = mean(Long_Cmp_per,na.rm=T),
-              Performance_PK = mean(Performance_PK,na.rm=T),
-              Performance_PKatt = mean(Performance_PKatt,na.rm=T),
-              Tackles_TklW = mean(Tackles_TklW,na.rm=T),
-              Pressures__per = mean(Pressures__per,na.rm=T),
-              Clr = mean(Clr,na.rm=T),
-              Blocks_Blocks = mean(Blocks_Blocks,na.rm=T),
-              Blocks_Sh = mean(Blocks_Sh,na.rm=T),
-              Blocks_ShSv = mean(Blocks_ShSv,na.rm=T),
-              Blocks_Pass = mean(Blocks_Pass,na.rm=T))
+## Clean Missing Data from each column
+
+summary(df)
+
+# Replaced all negative values with 0
+for (c in colnames(df))
+    df[[c]] <- replace(df[[c]],which(df[[c]] <0) ,0) 
+
+
+# Replace all NA with 0
+for (c in colnames(df))
+    df[[c]] <- replace(df[[c]],which(is.na(df[[c]])) ,0) 
+
+
+summary(df)
 
 
 
-## 
-## Clean outliers from each column
-## 
+table(subset(df,is.na(`Standard_G/Sh`))$Pos)
+
+
+for (i in colnames(df)) {
+    for (j in colnames(df)) {
+        if (i == j) {
+            next
+        } else {
+            if (all(!is.na(df[[i]])) & all(!is.na(df[[j]])) & sum(df[[i]] == df[[j]])/nrow(df) > 0.9) {
+                print(paste(i,j))
+            }
+        }
+    }
+}
+
+df<- df %>% select(-c("90s","90s.x","90s.y"))
+df<- df %>% select(-c("Position", "Country"))
+
+
+
+
+
 ## Correlation heatmap
 
