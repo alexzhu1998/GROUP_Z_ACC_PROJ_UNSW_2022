@@ -134,9 +134,9 @@ keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
           'Performance_PK','Expected_xG','Annualized_Salary','90s_avg')
 
 temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
-cormat <- cor(temp_df[c(1:25,66)], method = "pearson")
+cormat <- cor(temp_df[c(names(temp_df)[1:25],"Annualized_Salary")], method = "pearson")
 corrplot(cormat, method = "number")
-cormat <- cor(temp_df[c(26:51,66)], method = "pearson")
+cormat <- cor(temp_df[c(names(temp_df)[26:51],"Annualized_Salary")], method = "pearson")
 corrplot(cormat, method = "number")
 cormat <- cor(temp_df[48:67], method = "pearson")
 corrplot(cormat, method = "number")
@@ -154,18 +154,8 @@ ggplot(df)+
 
 
 
+save(df,file = "data/model2.RData")
 
-
-gbmFit.param <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
-gbmFit.param
-
-min <- which.min(gbmFit.param$cv.error)
-min
-gbm.perf(gbmFit.param, method = "cv")
-
-gbmFit <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", n.trees = min, interaction.depth = 1, shrinkage = 0.01)
-
-summary(gbmFit)
 
 
 

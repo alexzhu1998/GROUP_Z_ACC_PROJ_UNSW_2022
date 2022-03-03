@@ -1,5 +1,5 @@
 load("data/model.RData")
-
+load("data/model2.RData")
 
 # LINEAR REGRESSION
 
@@ -35,3 +35,17 @@ plot(FW_RFL$Annualized_Salary,FW_RFL$Predicted_Sal, main= "FW RFL")
 MF_RFL %>% arrange(Diff,descending = T)
 DF_RFL %>% arrange(Diff,descending = T)
 FW_RFL %>% arrange(Diff,descending = T)
+
+
+# GBM
+
+gbmFit.param <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param
+
+min <- which.min(gbmFit.param$cv.error)
+min
+gbm.perf(gbmFit.param, method = "cv")
+
+gbmFit <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", n.trees = min, interaction.depth = 1, shrinkage = 0.01)
+
+summary(gbmFit)
