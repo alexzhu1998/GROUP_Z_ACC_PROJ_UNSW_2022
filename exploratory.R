@@ -122,14 +122,38 @@ coeff_table[coeff_table[,"p_value"]<0.05,]
 
 ## Correlation heatmap
 temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
-cormat <- cor(temp_df[1:20], method = "pearson")
-cormat <- corrplot(cormat, method = "number")
-cormat <- cor(temp_df[21:40], method = "pearson")
-cormat <- corrplot(cormat, method = "number")
-cormat <- cor(temp_df[41:60], method = "pearson")
-cormat <- corrplot(cormat, method = "number")
-cormat <- cor(temp_df[61:67], method = "pearson")
-cormat <- corrplot(cormat, method = "number")
+cormat <- cor(temp_df[c(1:25,66)], method = "pearson")
+corrplot(cormat, method = "number")
+cormat <- cor(temp_df[c(26:51,66)], method = "pearson")
+corrplot(cormat, method = "number")
+cormat <- cor(temp_df[48:67], method = "pearson")
+corrplot(cormat, method = "number")
+
+cor_df <- df[,keep]
+cormat <- cor(cor_df, method = "pearson")
+corrplot(cormat, method = "number")
+
+##Distribution of salary (including RFL)
+ggplot(df)+
+    geom_histogram(aes(x = Annualized_Salary, y = ..density..), color = "black", fill="#33AFFF")+
+    labs(x = "Annualised Salary", y = "Density", title = "Distribution of Annualised Salary")+
+    theme_bw() +
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=16, face = "bold"), plot.subtitle=element_text(size=13))
+
+
+
+
+
+gbmFit.param <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param
+
+min <- which.min(gbmFit.param$cv.error)
+min
+gbm.perf(gbmFit.param, method = "cv")
+
+gbmFit <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", n.trees = min, interaction.depth = 1, shrinkage = 0.01)
+
+summary(gbmFit)
 
 
 
