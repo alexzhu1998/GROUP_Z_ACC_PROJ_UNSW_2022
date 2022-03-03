@@ -118,14 +118,18 @@ remove <- c('Total_Att','')
 
 colnames(df)
 keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_ShSv',
-          'Int','Clr','Total_Cmp%')
+          'Int','Clr','Total_Cmp%',
+          'Standard_Sh/90','Standard_G/SoT','Standard_Dist','Standard_FK',
+          'Performance_PK','Expected_xG','Annualized_Salary','90s_avg')
 
 temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
 cormat <- cor(temp_df[c(1:25,66)], method = "pearson")
 corrplot(cormat, method = "number")
 cormat <- cor(temp_df[c(26:51,66)], method = "pearson")
 corrplot(cormat, method = "number")
-cormat <- cor(temp_df[51:67], method = "pearson")
+cormat <- cor(temp_df[48:67], method = "pearson")
 corrplot(cormat, method = "number")
 
-
+cor_df <- df[,keep]
+cormat <- cor(cor_df, method = "pearson")
+corrplot(cormat, method = "number")
