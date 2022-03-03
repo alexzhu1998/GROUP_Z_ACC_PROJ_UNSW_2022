@@ -4,6 +4,8 @@ load("data/merged_tourn.RData")
 
 library(dplyr)
 library(corrplot)
+library(ggplot2)
+
 df <- PLAYER_league_non_goal_salary
 
 #Edit in a new column that takes first two characters from position
@@ -98,11 +100,12 @@ save(RFL,nonRFL,file = "data/model.RData")
 pos_coef_list <- list()
 for (i in seq_along(pos)) {
     pos_df <- df %>%
-        filter(Pos_new == pos[1])%>%
+        filter(Pos_new == pos[3])%>%
         filter(League != 'RFL')
     
     
-    mod <- glm(Annualized_Salary ~ .-Player-Nation, data = pos_df[,-71])
+    mod <- glm(Annualized_Salary ~ .-Player-Nation-Squad-League-Year, data = pos_df[,-71],
+               family = )
     s <- summary(mod)
     
     coeff_table <- s$coefficients
@@ -121,6 +124,15 @@ colnames(coeff_table)[4] <- "p_value"
 coeff_table[coeff_table[,"p_value"]<0.05,] 
 
 ## Correlation heatmap
+cormat <- cor(temp_df, method = "pearson")
+remove <- c('Total_Att','')
+
+colnames(df)
+keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
+          'Int','Clr','Total_Cmp%','xA','Standard_SoT/90',
+          'Standard_Sh/90','Standard_G/SoT','Standard_Dist','Standard_FK',
+          'Performance_PK','Expected_xG','Annualized_Salary','90s_avg')
+
 temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
 cormat <- cor(temp_df[c(1:25,66)], method = "pearson")
 corrplot(cormat, method = "number")
@@ -154,6 +166,7 @@ gbm.perf(gbmFit.param, method = "cv")
 gbmFit <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", n.trees = min, interaction.depth = 1, shrinkage = 0.01)
 
 summary(gbmFit)
+
 
 
 
