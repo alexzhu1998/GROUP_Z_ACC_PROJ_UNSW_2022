@@ -2,6 +2,13 @@
 
 ## UNSW Group Assignment for ACTL4001
 
+# Methods:
+Method 1: Leagues are ranked (confirmed by LIC as useless) -> use predictors to predict A league (hopefully one of the predictors is strong)
+Method 2: Leagues are ranked (confirmed by LIC as useless) -> use them as a way of rating players
+Method 3: Use tournament data exclusively to rank players -> league data is only used for selection
+Method 4: Exploratory data analysis -> fluff a player rating
+
+
 
 # Instructions for setting up Github and linking it to RStudio Projects
 1. **Make Github Account**: Create a Github account.
