@@ -4,7 +4,6 @@ load("data/merged_tourn.RData")
 
 library(dplyr)
 library(corrplot)
-library(caret)
 df <- PLAYER_league_non_goal_salary
 
 #Edit in a new column that takes first two characters from position
@@ -117,8 +116,8 @@ cormat <- cor(temp_df, method = "pearson")
 remove <- c('Total_Att','')
 
 colnames(df)
-keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_ShSv',
-          'Int','Clr','Total_Cmp%',
+keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
+          'Int','Clr','Total_Cmp%','xA','Standard_SoT/90',
           'Standard_Sh/90','Standard_G/SoT','Standard_Dist','Standard_FK',
           'Performance_PK','Expected_xG','Annualized_Salary','90s_avg')
 
