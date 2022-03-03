@@ -3,7 +3,12 @@ load("data/merged_tourn.RData")
 
 
 library(dplyr)
+library(corrplot)
 df <- PLAYER_league_non_goal_salary
+
+#Edit in a new column that takes first two characters from position
+df['Pos_new'] <- substr(df$Pos,1,2)
+
 
 colnames(df) <- gsub(" ","_", colnames(df))
 
@@ -23,6 +28,8 @@ vec_of_attr <- c("Total_Cmp%",
                  "Gls",
                  "Standard_SoT%",
                  "Standard_G/Sh")
+
+pos <- c("DF","MF","FW")
 
 ## Took average of all 90s columns
 df$`90s_avg` <- rowMeans(df %>% select("90s","90s.x","90s.y")) * 90
@@ -76,11 +83,35 @@ for (i in colnames(df)) {
 }
 
 df<- df %>% select(-c("90s","90s.x","90s.y"))
-df<- df %>% select(-c("Position", "Country"))
+
+df<- df %>% select(-c("Position", "Country","Pos"))
 
 nonRFL <- filter(df,League != "RFL")
 
 mod <- glm(Annualized_Salary ~ .-Player-Nation, data = nonRFL)
+
+
+
+#Separate players by position
+pos_coef_list <- list()
+for (i in seq_along(pos)) {
+    pos_df <- df %>%
+        filter(Pos_new == pos[1])%>%
+        filter(League != 'RFL')
+    
+    
+    mod <- glm(Annualized_Salary ~ .-Player-Nation, data = pos_df[,-71])
+    s <- summary(mod)
+    
+    coeff_table <- s$coefficients
+    colnames(coeff_table)[4] <- "p_value"
+    coeff_table[coeff_table[,"p_value"]<0.05,]
+
+    
+}
+
+mod <- glm(Annualized_Salary ~ .-Player-Nation-Pos_new, data = df)
+
 s <- summary(mod)
 
 coeff_table <- s$coefficients
@@ -88,4 +119,12 @@ colnames(coeff_table)[4] <- "p_value"
 coeff_table[coeff_table[,"p_value"]<0.05,] 
 
 ## Correlation heatmap
-
+temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
+cormat <- cor(temp_df[1:20], method = "pearson")
+cormat <- corrplot(cormat, method = "number")
+cormat <- cor(temp_df[21:40], method = "pearson")
+cormat <- corrplot(cormat, method = "number")
+cormat <- cor(temp_df[41:60], method = "pearson")
+cormat <- corrplot(cormat, method = "number")
+cormat <- cor(temp_df[61:67], method = "pearson")
+cormat <- corrplot(cormat, method = "number")
