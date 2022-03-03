@@ -89,7 +89,7 @@ df<- df %>% select(-c("Position", "Country","Pos"))
 nonRFL <- filter(df,League != "RFL")
 RFL <- filter(df,League == "RFL")
 
-
+save(RFL,nonRFL,file = "data/model.RData")
 
 cols_to_remove <- c("Pos_new","Player","Nation","League","Squad")
 
