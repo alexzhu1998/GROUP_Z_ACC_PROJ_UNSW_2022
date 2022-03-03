@@ -4,6 +4,7 @@ load("data/merged_tourn.RData")
 
 library(dplyr)
 library(corrplot)
+library(caret)
 df <- PLAYER_league_non_goal_salary
 
 #Edit in a new column that takes first two characters from position
@@ -27,8 +28,7 @@ vec_of_attr <- c("Total_Cmp%",
                  "Blocks_Pass",
                  "Gls",
                  "Standard_SoT%",
-                 "Standard_G/Sh",
-                 "Annualized_Salary")
+                 "Standard_G/Sh")
 
 pos <- c("DF","MF","FW")
 
@@ -90,11 +90,12 @@ df<- df %>% select(-c("Position", "Country","Pos"))
 pos_coef_list <- list()
 for (i in seq_along(pos)) {
     pos_df <- df %>%
-        filter(Pos_new == pos[1])%>%
+        filter(Pos_new == pos[3])%>%
         filter(League != 'RFL')
     
     
-    mod <- glm(Annualized_Salary ~ .-Player-Nation, data = pos_df[,-71])
+    mod <- glm(Annualized_Salary ~ .-Player-Nation-Squad-League-Year, data = pos_df[,-71],
+               family = )
     s <- summary(mod)
     
     coeff_table <- s$coefficients
@@ -112,14 +113,19 @@ colnames(coeff_table)[4] <- "p_value"
 coeff_table[coeff_table[,"p_value"]<0.05,] 
 
 ## Correlation heatmap
-temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
-cormat <- cor(temp_df[1:20], method = "pearson")
-cormat <- corrplot(cormat, method = "number")
-cormat <- cor(temp_df[21:40], method = "pearson")
-cormat <- corrplot(cormat, method = "number")
-cormat <- cor(temp_df[41:60], method = "pearson")
-cormat <- corrplot(cormat, method = "number")
-cormat <- cor(temp_df[61:67], method = "pearson")
-cormat <- corrplot(cormat, method = "number")
+cormat <- cor(temp_df, method = "pearson")
+remove <- c('Total_Att','')
 
-aidan <- 2
+colnames(df)
+keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_ShSv',
+          'Int','Clr','Total_Cmp%')
+
+temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
+cormat <- cor(temp_df[c(1:25,66)], method = "pearson")
+corrplot(cormat, method = "number")
+cormat <- cor(temp_df[c(26:51,66)], method = "pearson")
+corrplot(cormat, method = "number")
+cormat <- cor(temp_df[51:67], method = "pearson")
+corrplot(cormat, method = "number")
+
+
