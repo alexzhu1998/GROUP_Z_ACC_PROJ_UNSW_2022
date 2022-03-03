@@ -22,8 +22,7 @@ vec_of_attr <- c("Total_Cmp%",
                  "Blocks_Pass",
                  "Gls",
                  "Standard_SoT%",
-                 "Standard_G/Sh",
-                 "Annualized_Salary")
+                 "Standard_G/Sh")
 
 ## Took average of all 90s columns
 df$`90s_avg` <- rowMeans(df %>% select("90s","90s.x","90s.y")) * 90
@@ -79,9 +78,9 @@ for (i in colnames(df)) {
 df<- df %>% select(-c("90s","90s.x","90s.y"))
 df<- df %>% select(-c("Position", "Country"))
 
+nonRFL <- filter(df,League != "RFL")
 
-
-mod <- glm(Annualized_Salary ~ .-Player-Nation, data = df)
+mod <- glm(Annualized_Salary ~ .-Player-Nation, data = nonRFL)
 s <- summary(mod)
 
 coeff_table <- s$coefficients
