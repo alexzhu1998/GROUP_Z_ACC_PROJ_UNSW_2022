@@ -38,7 +38,6 @@ FW_RFL %>% arrange(Diff,descending = T)
 
 
 # GBM
-
 gbmFit.param <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param
 
@@ -49,3 +48,27 @@ gbm.perf(gbmFit.param, method = "cv")
 gbmFit <- gbm(Annualized_Salary ~., data = df[,-c(1,2,3,4,5,71)], distribution = "gaussian", n.trees = min, interaction.depth = 1, shrinkage = 0.01)
 
 summary(gbmFit)
+
+#With correlated variables removed
+keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
+          'Int','Clr','Total_Cmp%','xA','Standard_SoT/90',
+          'Standard_Sh/90','Standard_G/SoT','Standard_Dist','Standard_FK',
+          'Performance_PK','Expected_xG','Annualized_Salary','90s_avg')
+#
+for (level in pos_levels) {
+    pos_df <- nonRFL %>% filter(Pos_new == level)
+    
+    gbmFit.param <- gbm(Annualized_Salary ~., data = pos_df[,keep], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+    gbmFit.param
+    
+    min <- which.min(gbmFit.param$cv.error)
+    min
+    gbm.perf(gbmFit.param, method = "cv")
+    
+    gbmFit <- gbm(Annualized_Salary ~., data = pos_df[,keep], distribution = "gaussian", n.trees = min, interaction.depth = 1, shrinkage = 0.01)
+    
+    summary(gbmFit)
+    
+}
+
+
