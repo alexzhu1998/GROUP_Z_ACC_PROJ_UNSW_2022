@@ -156,7 +156,15 @@ ggplot(df)+
 
 save(df,file = "data/model2.RData")
 
+#Check expected goals per position
+for (level in pos) {
+    test <- nonRFL[,c(keep,'Pos_new')] %>% filter(Pos_new == level)
+    print(level)
+    print(mean(test$Expected_xG))
+}
 
+#Box plot showing distribution of Expected_xG
+boxplot(`Standard_Sh/90` ~ Pos_new, data = df)
 
 
 
