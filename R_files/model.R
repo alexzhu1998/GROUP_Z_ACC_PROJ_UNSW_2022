@@ -1,6 +1,7 @@
 load("data/model.RData")
 load("data/model2.RData")
 load("data/cor_df.RData")
+load("data/tourn_merge.Rdata")
 
 library(dplyr)
 library(gbm)
