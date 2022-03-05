@@ -116,3 +116,21 @@ hist(gbm.predict_FW)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "MF")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "DF")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], breaks = 20)
+
+#Goalkeeper model first
+
+
+#PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
+#Group by tournament team, average salary for each role (FW, MF, DF, GK score, overall average sal) (relo between scores and placement - classification model)
+#Either clasify ranks directly, 1 beats 2,3,4,5 -> Response Win/Loss (these attributes beat other attributes -> "Win" -> 60% chance of win
+
+# 1 vs (2 or 3)// 1 vs (4 or 5)// 1 vs 6,7,8, or 9, 1 vs 
+#Pr(At least one win) -> mess around with this probability to be convincing
+
+#Pick a bunch of players that we look at data and say "that might be economical" -> score -> spit out probability -> threshold for our object
+
+#
+
+
+
+
