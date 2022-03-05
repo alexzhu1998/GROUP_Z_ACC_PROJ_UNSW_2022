@@ -1,6 +1,5 @@
 load("data/merged_league.RData")
 load("data/merged_tourn.RData")
-install.packages("gbm")
 
 library(dplyr)
 library(corrplot)
@@ -143,6 +142,7 @@ cormat <- cor(temp_df[48:67], method = "pearson")
 corrplot(cormat, method = "number")
 
 cor_df <- df[,keep]
+save(cor_df, file = "data/cor_df.RData")
 cormat <- cor(cor_df, method = "pearson")
 corrplot(cormat, method = "number")
 

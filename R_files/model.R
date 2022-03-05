@@ -1,6 +1,6 @@
 load("data/model.RData")
 load("data/model2.RData")
-
+load("data/cor_df.RData")
 
 library(dplyr)
 library(gbm)
