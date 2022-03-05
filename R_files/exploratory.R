@@ -5,8 +5,11 @@ install.packages("gbm")
 library(dplyr)
 library(corrplot)
 library(ggplot2)
+<<<<<<< HEAD:exploratory.R
 library(gbm)
 
+=======
+>>>>>>> 7b50d8de094069a3c8f86dbc1ee5a3a92cf79c6a:R_files/exploratory.R
 
 df <- PLAYER_league_non_goal_salary
 
@@ -74,25 +77,27 @@ summary(df)
 table(subset(df,is.na(`Standard_G/Sh`))$Pos)
 
 
-for (i in colnames(df)) {
-    for (j in colnames(df)) {
-        if (i == j) {
-            next
-        } else {
-            if (all(!is.na(df[[i]])) & all(!is.na(df[[j]])) & sum(df[[i]] == df[[j]])/nrow(df) > 0.9) {
-                print(paste(i,j))
-            }
-        }
-    }
-}
+# for (i in colnames(df)) {
+#     for (j in colnames(df)) {
+#         if (i == j) {
+#             next
+#         } else {
+#             if (all(!is.na(df[[i]])) & all(!is.na(df[[j]])) & sum(df[[i]] == df[[j]])/nrow(df) > 0.9) {
+#                 print(paste(i,j))
+#             }
+#         }
+#     }
+# }
 
 df<- df %>% select(-c("90s","90s.x","90s.y"))
 
 df<- df %>% select(-c("Position", "Country","Pos"))
 
 nonRFL <- filter(df,League != "RFL")
+RFL <- filter(df,League == "RFL")
 
-mod <- glm(Annualized_Salary ~ .-Player-Nation, data = nonRFL)
+###### SAVING INTO MODEL.R
+save(RFL,nonRFL,file = "data/model.RData")
 
 
 
@@ -100,11 +105,12 @@ mod <- glm(Annualized_Salary ~ .-Player-Nation, data = nonRFL)
 pos_coef_list <- list()
 for (i in seq_along(pos)) {
     pos_df <- df %>%
-        filter(Pos_new == pos[1])%>%
+        filter(Pos_new == pos[3])%>%
         filter(League != 'RFL')
     
     
-    mod <- glm(Annualized_Salary ~ .-Player-Nation, data = pos_df[,-71])
+    mod <- glm(Annualized_Salary ~ .-Player-Nation-Squad-League-Year, data = pos_df[,-71],
+               family = )
     s <- summary(mod)
     
     coeff_table <- s$coefficients
@@ -123,7 +129,17 @@ colnames(coeff_table)[4] <- "p_value"
 coeff_table[coeff_table[,"p_value"]<0.05,] 
 
 ## Correlation heatmap
+cormat <- cor(temp_df, method = "pearson")
+remove <- c('Total_Att','')
+
+colnames(df)
+keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
+          'Int','Clr','Total_Cmp%','xA','Standard_SoT/90',
+          'Standard_Sh/90','Standard_G/SoT','Standard_Dist','Standard_FK',
+          'Performance_PK','Expected_xG','Annualized_Salary','90s_avg')
+
 temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
+<<<<<<< HEAD:exploratory.R
 cormat <- cor(temp_df[1:20], method = "pearson")
 cormat <- corrplot(cormat, method = "number")
 cormat <- cor(temp_df[21:40], method = "pearson")
@@ -135,6 +151,20 @@ cormat <- corrplot(cormat, method = "number")
 
 
 ##Distribution of salary
+=======
+cormat <- cor(temp_df[c(names(temp_df)[1:25],"Annualized_Salary")], method = "pearson")
+corrplot(cormat, method = "number")
+cormat <- cor(temp_df[c(names(temp_df)[26:51],"Annualized_Salary")], method = "pearson")
+corrplot(cormat, method = "number")
+cormat <- cor(temp_df[48:67], method = "pearson")
+corrplot(cormat, method = "number")
+
+cor_df <- df[,keep]
+cormat <- cor(cor_df, method = "pearson")
+corrplot(cormat, method = "number")
+
+##Distribution of salary (including RFL)
+>>>>>>> 7b50d8de094069a3c8f86dbc1ee5a3a92cf79c6a:R_files/exploratory.R
 ggplot(df)+
     geom_histogram(aes(x = Annualized_Salary, y = ..density..), color = "black", fill="#33AFFF")+
     labs(x = "Annualised Salary", y = "Density", title = "Distribution of Annualised Salary")+
@@ -142,6 +172,7 @@ ggplot(df)+
     theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=16, face = "bold"), plot.subtitle=element_text(size=13))
 
 
+<<<<<<< HEAD:exploratory.R
 ##Distribution of salary
 ggplot(PLAYER_league_non_goal_salary)+
     geom_histogram(aes(x = `Annualized Salary`, y = ..density..), color = "black", fill="#33AFFF")+
@@ -166,6 +197,20 @@ summary(gbmFit)
 
 
 
+=======
+
+save(df,file = "data/model2.RData")
+
+#Check expected goals per position
+for (level in pos) {
+    test <- nonRFL[,c(keep,'Pos_new')] %>% filter(Pos_new == level)
+    print(level)
+    print(mean(test$Expected_xG))
+}
+
+#Box plot showing distribution of Expected_xG
+boxplot(`Standard_Sh/90` ~ Pos_new, data = df)
+>>>>>>> 7b50d8de094069a3c8f86dbc1ee5a3a92cf79c6a:R_files/exploratory.R
 
 
 
