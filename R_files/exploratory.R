@@ -131,11 +131,12 @@ cormat <- cor(temp_df, method = "pearson")
 remove <- c('Total_Att','')
 
 colnames(df)
-keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
+keep_player <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
           'Int','Clr','Total_Cmp%','xA','Standard_SoT/90',
           'Standard_Sh/90','Standard_G/SoT','Standard_Dist','Standard_FK',
           'Performance_PK','Expected_xG','Annualized_Salary','90s_avg')
-
+keep_goal <- c()
+#Player cormat
 temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
 
 cormat <- cor(temp_df[c(names(temp_df)[1:25],"Annualized_Salary")], method = "pearson")
@@ -145,9 +146,15 @@ corrplot(cormat, method = "number")
 cormat <- cor(temp_df[48:67], method = "pearson")
 corrplot(cormat, method = "number")
 
-cor_df <- df[,keep]
+cor_df <- df[,keep_player]
 save(cor_df, file = "data/cor_df.RData")
 cormat <- cor(cor_df, method = "pearson")
+corrplot(cormat, method = "number")
+
+#Goalkeeper corrmat
+temp_df <- PLAYER_league_goal%>% select(-c("Player","Nation","League","Squad","Pos","Year"))
+
+cormat <- cor(temp_df, method = "pearson")
 corrplot(cormat, method = "number")
 
 ##Distribution of salary (including RFL)
@@ -162,7 +169,7 @@ save(df,file = "data/model2.RData")
 
 #Check expected goals per position
 for (level in pos) {
-    test <- nonRFL[,c(keep,'Pos_new')] %>% filter(Pos_new == level)
+    test <- nonRFL[,c(keep_player,'Pos_new')] %>% filter(Pos_new == level)
     print(level)
     print(mean(test$Expected_xG))
 }
@@ -171,5 +178,19 @@ for (level in pos) {
 boxplot(`Standard_Sh/90` ~ Pos_new, data = df)
 
 
+#Analysing other team compositions
+squad_names <- unique(df$Squad)
+team_size <- vector(length = length(squad_names))
 
-
+for (i in seq_along(squad_names)) {
+    
+    temp <- df %>% 
+        filter(Squad == squad_names[i]) %>%
+        filter(Year == 2021)%>%
+        group_by(Pos_new) %>% 
+        summarise(count = n())
+    print(squad_names[i])
+    print(temp)
+    team_size[i] = sum(temp$count)
+}
+mean(team_size)
