@@ -105,6 +105,24 @@ PLAYER_tourn_non_goal <- merge(x = PLAYER_tourn_non_goal,
 stopifnot(count(PLAYER_tourn_non_goal) == count(PLAYER_tourn_def))
 
 
+
+PLAYER_tourn_res["Year"] <- 2020
+colnames(PLAYER_tourn_res)[c(1,2)] <- c("Places","Nation")
+
+
+PLAYER_tourn_res2["Year"] <- 2021
+colnames(PLAYER_tourn_res2)[c(1,2)] <- c("Places","Nation")
+
+PLAYER_tourn_res_all <- rbind(PLAYER_tourn_res,PLAYER_tourn_res2)
+
+PLAYER_tourn_non_goal <- left_join(x = PLAYER_tourn_non_goal,
+                                    y = PLAYER_tourn_res_all,
+                                    by = c("Year","Nation"))
+PLAYER_tourn_goal <- left_join(x = PLAYER_tourn_goal,
+                               y = PLAYER_tourn_res_all,
+                               by = c("Year","Nation"))
+
+
 #### Remove Useless Data #####
 # data_to_remove <- c(dats2,"PLAYER_tourn_shoot")
 # rm(list = list(data_to_remove)[[1]])
