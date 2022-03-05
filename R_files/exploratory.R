@@ -95,6 +95,7 @@ save(RFL,nonRFL,file = "data/model.RData")
 
 
 
+# Aidan Code --------------------------------------------------------------
 #Separate players by position
 pos_coef_list <- list()
 for (i in seq_along(pos)) {
