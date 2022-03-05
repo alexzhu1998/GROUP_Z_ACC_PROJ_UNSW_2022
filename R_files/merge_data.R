@@ -54,16 +54,23 @@ overlapping_cols2 <- c("Player","Year","League","Squad")
 setdiff(unique(select(PLAYER_salary, overlapping_cols2)),
         unique(select(PLAYER_league_non_goal, overlapping_cols2)))
 
-PLAYER_league_non_goal_salary <- merge(
+PLAYER_league_non_goal_salary <- left_join(
     x = PLAYER_league_non_goal,
     y = PLAYER_salary,
-    by = overlapping_cols2)
+    by = overlapping_cols2
+)
+
+PLAYER_league_goal_salary <- left_join(
+    x = PLAYER_league_goal,
+    y = PLAYER_salary,
+    by = overlapping_cols2
+)
 
 
 # data_to_remove <- c(dats,"PLAYER_league_non_goal", "PLAYER_salary", "PLAYER_salary2020", "PLAYER_salary2021")
 # rm(list = list(data_to_remove)[[1]])
 
-save(PLAYER_league_non_goal_salary,PLAYER_league_goal, file = "data/merged_league.RData")
+
 
 
 
@@ -123,11 +130,75 @@ PLAYER_tourn_goal <- left_join(x = PLAYER_tourn_goal,
                                by = c("Year","Nation"))
 
 
+#### Data Preprocessing ####
+
+
+preprocessing <- function(df,ninetysec = F, position = F) {
+    colnames(df) <- gsub(" ","_", colnames(df))
+    
+    if (length(unique(df$Pos)) > 1) {
+        df['Pos_new'] <- substr(df$Pos,1,2)
+        if(position) {
+            df<- df %>% select(-c("Pos","Position"))
+        } else {
+            df<- df %>% select(-c("Pos"))
+        }
+    }
+    
+    vec_of_attr <- c("Total_Cmp%", 
+                     "Short_Cmp%", 
+                     "Medium_Cmp%", 
+                     "Long_Cmp%",
+                     "Performance_PK",
+                     "Performance_PKatt",
+                     "Tackles_TklW",
+                     "Pressures_%",
+                     "Clr",
+                     "Blocks_Blocks",
+                     "Blocks_Sh",
+                     "Blocks_ShSv",
+                     "Blocks_Pass",
+                     "Gls",
+                     "Standard_SoT%",
+                     "Standard_G/Sh")
+    
+    if (ninetysec) {
+        df$`90s_avg` <- rowMeans(df %>% select("90s","90s.x","90s.y")) * 90
+        df$`90s_avg` <- ifelse(df$`90s_avg` < 0.1,0,df$`90s_avg`)
+        df <- filter(df,`90s_avg` > 0) # got rid of all negative 90s ppl
+        df[vec_of_attr] <- df[vec_of_attr]/df$`90s_avg`    
+        df <- df %>% select(-c("90s","90s.x","90s.y"))
+    }
+    # Replaced all negative values with 0
+    for (c in colnames(df))
+        df[[c]] <- replace(df[[c]],which(df[[c]] <0) ,0) 
+    
+    
+    # Replace all NA with 0
+    for (c in colnames(df))
+        df[[c]] <- replace(df[[c]],which(is.na(df[[c]])) ,0) 
+    
+    return(df)
+    
+}
+
+PLAYER_tourn_goal <- preprocessing(PLAYER_tourn_goal)
+PLAYER_tourn_non_goal <- preprocessing(PLAYER_tourn_non_goal,ninetysec=T)
+PLAYER_league_non_goal_salary <- preprocessing(PLAYER_league_non_goal_salary,ninetysec=T,position = T)
+PLAYER_league_goal_salary <- preprocessing(PLAYER_league_goal_salary,position = T)
+
+
+
+
+
+
+
 #### Remove Useless Data #####
 # data_to_remove <- c(dats2,"PLAYER_tourn_shoot")
 # rm(list = list(data_to_remove)[[1]])
 
 save(PLAYER_tourn_goal,PLAYER_tourn_non_goal, file = "data/merged_tourn.RData")
-##### Join Data #####
+save(PLAYER_league_non_goal_salary,PLAYER_league_goal_salary, file = "data/merged_league.RData")
+
 
 
