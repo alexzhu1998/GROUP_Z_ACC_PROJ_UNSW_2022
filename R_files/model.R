@@ -1,6 +1,8 @@
 load("data/model.RData")
 load("data/model2.RData")
 
+
+library(dplyr)
 # LINEAR REGRESSION
 
 
@@ -20,6 +22,7 @@ for (level in pos_levels) {
               cbind(get(paste0(level,"_RFL")),Predicted_Sal)))
     
     Diff <- eval(str2lang(paste0(level,"_RFL")))["Predicted_Sal"] - eval(str2lang(paste0(level,"_RFL")))["Annualized_Salary"]
+    names(Diff) <- "Diff"
     eval(call("<-",paste0(level,"_RFL"),
               cbind(get(paste0(level,"_RFL")),Diff)))
     
