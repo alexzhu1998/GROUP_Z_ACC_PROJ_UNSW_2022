@@ -165,7 +165,7 @@ preprocessing <- function(df,ninetysec = F, position = F) {
     if (ninetysec) {
         df$`90s_avg` <- rowMeans(df %>% select("90s","90s.x","90s.y")) * 90
         df$`90s_avg` <- ifelse(df$`90s_avg` < 0.1,0,df$`90s_avg`)
-        df <- filter(df,`90s_avg` > 0)
+        df <- filter(df,`90s_avg` > 0) # got rid of all negative 90s ppl
         df[vec_of_attr] <- df[vec_of_attr]/df$`90s_avg`    
         df <- df %>% select(-c("90s","90s.x","90s.y"))
     }
