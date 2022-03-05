@@ -183,7 +183,7 @@ preprocessing <- function(df,ninetysec = F, position = F) {
 }
 
 PLAYER_tourn_goal <- preprocessing(PLAYER_tourn_goal)
-PLAYER_tourn_non_goal <- preprocessing(PLAYER_tourn_non_goal)
+PLAYER_tourn_non_goal <- preprocessing(PLAYER_tourn_non_goal,ninetysec=T)
 PLAYER_league_non_goal_salary <- preprocessing(PLAYER_league_non_goal_salary,ninetysec=T,position = T)
 PLAYER_league_goal_salary <- preprocessing(PLAYER_league_goal_salary,position = T)
 
