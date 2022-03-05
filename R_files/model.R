@@ -44,6 +44,8 @@ FW_RFL %>% arrange(Diff,descending = T)
 ## DO NOT CHANGE COLUMN ORDER -> CHANGING COLUMN ORDER WILL REQUIRE THE FOLLOWING CODE TO BE MODIFIED ##
 
 #Fit boosting model on annualised salary dataset with non RFL football leagues and ALL predictors
+colnames(df)[c(1,2,3,4,5,71)]
+
 gbmFit.param <- gbm(Annualized_Salary ~., data = df[df['League'] != "RFL",-c(1,2,3,4,5,71)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param
 
