@@ -13,6 +13,9 @@ df['Pos_new'] <- substr(df$Pos,1,2)
 
 colnames(df) <- gsub(" ","_", colnames(df))
 
+# Alex --------------------------------------------------------------------
+
+
 vec_of_attr <- c("Total_Cmp%", 
                  "Short_Cmp%", 
                  "Medium_Cmp%", 
