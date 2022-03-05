@@ -79,6 +79,8 @@ summary(gbmFit_MF)
 gbm.predict_MF = predict(gbmFit_MF, newdata = cor_df_merge[(cor_df_merge['Pos_new'] == "MF"),-c(17, 19,20,21,22,23)], n.trees = min_MF, type = "response")
 hist(gbm.predict_MF)
 
+colnames(cor_df_merge)[c(17,19,20,21,22,23)]
+
 #DF model
 gbmFit.param_DF <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_DF
@@ -106,7 +108,7 @@ gbmFit_FW <- gbm(Annualized_Salary ~., cor_df_merge[(cor_df_merge['League'] != "
 
 summary(gbmFit_FW)
 
-gbm.predict_FW = predict(gbmFit_FW, newdata = cor_df_merge[(cor_df_merge['Pos_new'] == "FW"),-c(17, 19,20,21,22,23)], n.trees = min_FW, type = "response")
+gbm.predict_FW = predict(gbmFit_FW, newdata = cor_df_merge[(cor_df_merge['Pos_new'] == "FW"),-c(17,19,20,21,22,23)], n.trees = min_FW, type = "response")
 hist(gbm.predict_FW)
 
 #Actual salary histograms
