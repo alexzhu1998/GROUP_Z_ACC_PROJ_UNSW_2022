@@ -145,19 +145,11 @@ for (level in pos) {
 boxplot(`Standard_Sh/90` ~ Pos_new, data = df)
 
 
-#Analysing other team compositions
-squad_names <- unique(df$Squad)
-team_size <- vector(length = length(squad_names))
+#Make Player_tourn_non_goal same columns as cor_df
+player_tourn_df <- PLAYER_tourn_non_goal[,keep_player[!keep_player == 'Annualized_Salary']]
+save(player_tourn_df, file = "data/player_tourn_df.RData")
 
-for (i in seq_along(squad_names)) {
-    
-    temp <- df %>% 
-        filter(Squad == squad_names[i]) %>%
-        filter(Year == 2021)%>%
-        group_by(Pos_new) %>% 
-        summarise(count = n())
-    print(squad_names[i])
-    print(temp)
-    team_size[i] = sum(temp$count)
-}
-mean(team_size)
+
+#Make Player_tourn_goal same columns as goal_df
+gk_tourn_df <- PLAYER_tourn_goal[keep_goal[!keep_goal == 'Annualized_Salary']]
+save(gk_tourn_df, file = "data/gk_tourn_df.RData")
