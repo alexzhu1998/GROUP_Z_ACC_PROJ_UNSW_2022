@@ -157,16 +157,17 @@ plot(gbm.predict_GK[(df['League'] != "RFL")], gk_df$Annualized_Salary[(df['Leagu
 
 
 
+
+
+
+
+
+
+
 #Actual salary histograms
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "DF")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], breaks = 20)
 hist(gk_df$Annualized_Salary[(gk_df['League'] != "RFL")], breaks = 20)
-
-plot(gk_df$`Performance_Save%`[(gk_df['League'] != "RFL")], gk_df$Annualized_Salary[(gk_df['League'] != "RFL")])
-
-plot(gbm.predict_GK[(gk_df['League'] != "RFL")], gk_df$Annualized_Salary[(gk_df['League'] != "RFL")])
-plot(gbm.predict_FW[(df['League'] == "RFL")], df$Annualized_Salary[(df['League'] == "RFL")])
-
 
 
 #PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
