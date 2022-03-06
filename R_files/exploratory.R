@@ -94,7 +94,11 @@ keep_player <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh'
           'Int','Clr','Total_Cmp%','xA','Standard_SoT/90',
           'Standard_Sh/90','Standard_G/SoT','Standard_Dist','Standard_FK',
           'Performance_PK','Expected_xG','Annualized_Salary','90s_avg')
-keep_goal <- c()
+
+keep_goal <- c('Age','Playing_Time_90s','Performance_GA90','Performance_Saves',
+               'Performance_Save%','W','D','L','Performance_CS','Performance_CS%','Penalty_Kicks_PKA',
+               'Penalty_Kicks_PKsv','Penalty_Kicks_PKm','Penalty_Kicks_Save%',
+               'Annualized_Salary')
 #Player cormat
 temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
 
@@ -111,10 +115,13 @@ cormat <- cor(cor_df, method = "pearson")
 corrplot(cormat, method = "number")
 
 #Goalkeeper corrmat
-temp_df <- PLAYER_league_goal%>% select(-c("Player","Nation","League","Squad","Pos","Year"))
+temp_df <- PLAYER_league_goal_salary%>% select(-c("Player","Nation","League","Squad","Pos_new",
+                                                  "Year","Country"))
 
 cormat <- cor(temp_df, method = "pearson")
 corrplot(cormat, method = "number")
+
+gk_df <- PLAYER_league_goal_salary[,keep_goal]
 
 ##Distribution of salary (including RFL)
 ggplot(df)+
