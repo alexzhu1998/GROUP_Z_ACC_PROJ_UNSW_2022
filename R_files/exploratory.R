@@ -123,7 +123,7 @@ cormat <- cor(temp_df, method = "pearson")
 corrplot(cormat, method = "number")
 
 gk_df <- PLAYER_league_goal_salary[,keep_goal]
-
+save(gk_df, file = "data/gk_df.RData")
 ##Distribution of salary (including RFL)
 ggplot(df)+
     geom_histogram(aes(x = Annualized_Salary, y = ..density..), color = "black", fill="#33AFFF")+
