@@ -30,7 +30,7 @@ winning_teams <- c('Sobianitedrucy',
                   'Varijitri Isles')
 
     
-    
+  
     
     
     

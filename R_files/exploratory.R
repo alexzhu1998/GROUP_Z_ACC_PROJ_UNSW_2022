@@ -122,7 +122,7 @@ temp_df <- PLAYER_league_goal_salary%>% select(-c("Player","Nation","League","Sq
 cormat <- cor(temp_df, method = "pearson")
 corrplot(cormat, method = "number")
 
-gk_df <- PLAYER_league_goal_salary[,keep_goal]
+gk_df <- PLAYER_league_goal_salary[,c(keep_goal,"Player","Nation","League","Squad","Country")]
 save(gk_df, file = "data/gk_df.RData")
 ##Distribution of salary (including RFL)
 ggplot(df)+
