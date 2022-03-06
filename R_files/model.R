@@ -2,6 +2,7 @@ load("data/model.RData")
 load("data/model2.RData")
 load("data/cor_df.RData")
 load("data/tourn_merge.Rdata")
+load("data/gk_df.RData")
 
 library(dplyr)
 library(gbm)
@@ -112,10 +113,32 @@ summary(gbmFit_FW)
 gbm.predict_FW = predict(gbmFit_FW, newdata = cor_df_merge[(cor_df_merge['Pos_new'] == "FW"),-c(17,19,20,21,22,23)], n.trees = min_FW, type = "response")
 hist(gbm.predict_FW)
 
+#GK model
+gbmFit.param_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-c(16,17,18,19,20)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param_GK
+
+min_GK <- which.min(gbmFit.param_GK$cv.error)
+min_GK
+gbm.perf(gbmFit.param_GK, method = "cv")
+
+gbmFit_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-c(16,17,18,19,20)], distribution = "gaussian", cv.fold = 10, n.trees = min_GK, interaction.depth = 1, shrinkage = 0.01)
+summary(gbmFit_GK)
+
+gbm.predict_GK = predict(gbmFit_GK, newdata = gk_df[,-c(15,16,17,18,19,20)], n.trees = min_GK, type = "response")
+hist(gbm.predict_GK, breaks = 20)
+
+
+
 #Actual salary histograms
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "MF")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "DF")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], breaks = 20)
+hist(gk_df$Annualized_Salary[(gk_df['League'] != "RFL")], breaks = 20)
+
+plot(gk_df$`Performance_Save%`[(gk_df['League'] != "RFL")], gk_df$Annualized_Salary[(gk_df['League'] != "RFL")])
+
+plot(gbm.predict_GK[(gk_df['League'] != "RFL")], gk_df$Annualized_Salary[(gk_df['League'] != "RFL")])
+plot(gbm.predict_FW[(df['League'] == "RFL")], df$Annualized_Salary[(df['League'] == "RFL")])
 
 #Goalkeeper model first
 
