@@ -128,3 +128,24 @@ cormat <- cor(temp_df[41:60], method = "pearson")
 cormat <- corrplot(cormat, method = "number")
 cormat <- cor(temp_df[61:67], method = "pearson")
 cormat <- corrplot(cormat, method = "number")
+
+min(df$Annualized_Salary)
+max(df$Annualized_Salary)
+
+ggplot(data = df, mapping = aes(x = League, y = Annualized_Salary)) +
+    geom_point() +
+    ylim(100, 10000000)
+
+ggplot(data = df, mapping = aes(x = Age, y = Annualized_Salary)) +
+    geom_point(mapping = aes(color = League)) +
+    ylim(100, 10000000)
+
+ggplot(data = df, mapping = aes(x = Age, y = Annualized_Salary)) +
+    geom_point(mapping = aes(color = Pos)) +
+    ylim(100, 10000000)
+
+ggplot(data = df, mapping = aes(x = Pos, y = Annualized_Salary)) +
+    geom_point() +
+    ylim(100, 30000000)
+
+
