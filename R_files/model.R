@@ -63,6 +63,9 @@ summary(gbmFit)
 gbm.predict = predict(gbmFit, newdata = df[,-c(1,2,3,4,5,70,71)], n.trees = min, type = "response")
 
 
+plot(gbm.predict[(df['League'] != "RFL")], df$Annualized_Salary[(df['League'] != "RFL")])
+plot(gbm.predict[(df['League'] == "RFL")], df$Annualized_Salary[(df['League'] == "RFL")])
+
 #New dataframe with correlated vairables removed + identifiable attributes
 cor_df_merge <- cbind(cor_df,df[,c("Player","Nation","Pos_new","League","Squad")])
 
@@ -78,8 +81,14 @@ gbmFit_MF <- gbm(Annualized_Salary ~., cor_df_merge[(cor_df_merge['League'] != "
 
 summary(gbmFit_MF)
 
-gbm.predict_MF = predict(gbmFit_MF, newdata = cor_df_merge[(cor_df_merge['Pos_new'] == "MF"),-c(17, 19,20,21,22,23)], n.trees = min_MF, type = "response")
-hist(gbm.predict_MF)
+gbm.predict_MF = predict(gbmFit_MF, newdata = cor_df_merge[,-c(17, 19,20,21,22,23)], n.trees = min_MF, type = "response")
+
+#Comparing actual vs expected in MF model
+hist(gbm.predict_MF[(cor_df_merge['Pos_new'] == "MF") & (df['League'] != "RFL")])
+hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "MF")], breaks = 20)
+
+plot(gbm.predict_MF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "MF")], df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "MF")])
+plot(gbm.predict_MF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF")])
 
 colnames(cor_df_merge)[c(17,19,20,21,22,23)]
 
@@ -95,8 +104,14 @@ gbmFit_DF <- gbm(Annualized_Salary ~., cor_df_merge[(cor_df_merge['League'] != "
 
 summary(gbmFit_DF)
 
-gbm.predict_DF = predict(gbmFit_DF, newdata = cor_df_merge[(cor_df_merge['Pos_new'] == "DF"),-c(17, 19,20,21,22,23)], n.trees = min_DF, type = "response")
-hist(gbm.predict_DF)
+gbm.predict_DF = predict(gbmFit_DF, newdata = cor_df_merge[,-c(17, 19,20,21,22,23)], n.trees = min_DF, type = "response")
+
+#Comparing actual vs expected in DF model
+hist(gbm.predict_DF[(cor_df_merge['Pos_new'] == "DF") & (df['League'] != "RFL")])
+hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "DF")], breaks = 20)
+
+plot(gbm.predict_MF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")], df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")])
+plot(gbm.predict_MF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")])
 
 #FW model
 gbmFit.param_FW <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
@@ -110,8 +125,15 @@ gbmFit_FW <- gbm(Annualized_Salary ~., cor_df_merge[(cor_df_merge['League'] != "
 
 summary(gbmFit_FW)
 
-gbm.predict_FW = predict(gbmFit_FW, newdata = cor_df_merge[(cor_df_merge['Pos_new'] == "FW"),-c(17,19,20,21,22,23)], n.trees = min_FW, type = "response")
-hist(gbm.predict_FW)
+gbm.predict_FW = predict(gbmFit_FW, newdata = cor_df_merge[,-c(17,19,20,21,22,23)], n.trees = min_FW, type = "response")
+
+#Comparing actual vs expected in FW model
+hist(gbm.predict_FW[(cor_df_merge['Pos_new'] == "FW") & (df['League'] != "RFL")])
+hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], breaks = 20)
+
+plot(gbm.predict_FW[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")])
+plot(gbm.predict_FW[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")])
+
 
 #GK model
 gbmFit.param_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-c(16,17,18,19,20)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
@@ -125,12 +147,17 @@ gbmFit_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-
 summary(gbmFit_GK)
 
 gbm.predict_GK = predict(gbmFit_GK, newdata = gk_df[,-c(15,16,17,18,19,20)], n.trees = min_GK, type = "response")
-hist(gbm.predict_GK, breaks = 20)
+
+#Comparing actual vs expected in GK model
+plot(gbm.predict_GK[(df['League'] == "RFL")], gk_df$Annualized_Salary[(df['League'] == "RFL")])
+plot(gbm.predict_GK[(df['League'] != "RFL")], gk_df$Annualized_Salary[(df['League'] != "RFL")])
+
+
+
 
 
 
 #Actual salary histograms
-hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "MF")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "DF")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], breaks = 20)
 hist(gk_df$Annualized_Salary[(gk_df['League'] != "RFL")], breaks = 20)
@@ -140,7 +167,6 @@ plot(gk_df$`Performance_Save%`[(gk_df['League'] != "RFL")], gk_df$Annualized_Sal
 plot(gbm.predict_GK[(gk_df['League'] != "RFL")], gk_df$Annualized_Salary[(gk_df['League'] != "RFL")])
 plot(gbm.predict_FW[(df['League'] == "RFL")], df$Annualized_Salary[(df['League'] == "RFL")])
 
-#Goalkeeper model first
 
 
 #PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
