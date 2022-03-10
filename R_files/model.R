@@ -3,6 +3,7 @@ load("data/model2.RData")
 load("data/cor_df.RData")
 load("data/tourn_merge.Rdata")
 load("data/gk_df.RData")
+load("data/gk_tourn_df.RData")
 
 library(dplyr)
 library(gbm)
@@ -80,7 +81,6 @@ gbm.perf(gbmFit.param_MF, method = "cv")
 gbmFit_MF <- gbm(Annualized_Salary ~., cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF"),-c(19,20,21,22,23)], distribution = "gaussian", n.trees = min_MF, interaction.depth = 1, shrinkage = 0.01)
 
 summary(gbmFit_MF)
-
 gbm.predict_MF = predict(gbmFit_MF, newdata = cor_df_merge[,-c(17, 19,20,21,22,23)], n.trees = min_MF, type = "response")
 
 #Comparing actual vs expected in MF model
@@ -193,6 +193,8 @@ FW_stats <- FW_tourn_df %>%
     group_by(Nation) %>%
     summarise(FW_Score = mean(gbm.tourn_FW))
 FW_stats %>% arrange(FW_Score,descending = T)
+
+merge(merge(MF_stats, DF_stats), FW_stats)
 
 
 #PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
