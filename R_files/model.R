@@ -166,6 +166,7 @@ hist(gk_df$Annualized_Salary[(gk_df['League'] != "RFL")], breaks = 20)
 gbm.tourn_MF = predict(gbmFit_MF, newdata = cor_tourn_merge[,-c(17,19,20,21,22,23)], n.trees = min_MF, type = "response")
 gbm.tourn_DF = predict(gbmFit_DF, newdata = cor_tourn_merge[,-c(17,19,20,21,22,23)], n.trees = min_DF, type = "response")
 gbm.tourn_FW = predict(gbmFit_FW, newdata = cor_tourn_merge[,-c(17,19,20,21,22,23)], n.trees = min_FW, type = "response")
+gbm.tourn_GK = predict(gbmFit_GK, newdata = gk_tourn_df[,-c(1,2,3,4)], n.trees = min_GK, type = "response")
 
 MF_tourn <- cbind(cor_tourn_merge[,c(19,20,21)], gbm.tourn_MF)
 MF_tourn_df <- MF_tourn %>%
@@ -194,7 +195,14 @@ FW_stats <- FW_tourn_df %>%
     summarise(FW_Score = mean(gbm.tourn_FW))
 FW_stats %>% arrange(FW_Score,descending = T)
 
-merge(merge(MF_stats, DF_stats), FW_stats)
+GK_tourn_df <- cbind(gk_tourn_df[,c(1,2)], gbm.tourn_GK)
+GK_stats <- GK_tourn_df %>%
+    group_by(Nation) %>%
+    summarise(GK_Score = mean(gbm.tourn_GK))
+GK_stats %>% arrange(GK_Score, descending = T)
+
+
+team_stats <- merge(merge(merge(MF_stats, DF_stats), FW_stats), GK_stats)
 
 
 #PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
