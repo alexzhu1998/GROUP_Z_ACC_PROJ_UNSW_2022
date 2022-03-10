@@ -31,4 +31,35 @@ winning_teams <- c('Sobianitedrucy',
 
 attach(df)    
 #Linear regression analaysis
-lm <-lm(Annualized_Salary ~ ., data = df)
+pos_df <- df %>%
+    filter(Pos_new == "DF")
+
+pos_df <- pos_df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
+        
+lm <-lm(Annualized_Salary ~ ., data = pos_df)
+c <- summary(lm)
+coeff_table <- c$coefficients
+colnames(coeff_table)[4] <- "p_value"
+coeff_table[coeff_table[,"p_value"]<0.05,]
+
+pos_df <- df %>%
+    filter(Pos_new == "MF")
+
+pos_df <- pos_df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
+        
+lm <-lm(Annualized_Salary ~ ., data = pos_df)
+c <- summary(lm)
+coeff_table <- c$coefficients
+colnames(coeff_table)[4] <- "p_value"
+coeff_table[coeff_table[,"p_value"]<0.05,]
+
+pos_df <- df %>%
+    filter(Pos_new == "FW")
+
+pos_df <- pos_df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
+        
+lm <-lm(Annualized_Salary ~ ., data = pos_df)
+c <- summary(lm)
+coeff_table <- c$coefficients
+colnames(coeff_table)[4] <- "p_value"
+coeff_table[coeff_table[,"p_value"]<0.05,]
