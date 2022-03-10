@@ -29,32 +29,6 @@ winning_teams <- c('Sobianitedrucy',
                   'Eastern Niasland',
                   'Varijitri Isles')
 
-    
-  
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-squad_names <- unique(df_2020$Squad)
-team_size <- vector(length = length(squad_names))
-for (i in seq_along(squad_names)) {
-    
-    temp <- df_2020 %>% 
-        filter(Squad == squad_names[i]) %>%
-        group_by(Pos_new) %>% 
-        summarise(count = n())
-    pos<- cbind(pos, temp$count)
-}
-mean(team_size)
-
-pos <- as.numeric(pos)
-temp <- data.frame(pos)
-rownames(temp) <- c("DF","MF","FW",'GK')
-rowMeans(temp)
+attach(df)    
+#Linear regression analaysis
+lm <-lm(Annualized_Salary ~ ., data = df)
