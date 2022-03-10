@@ -204,8 +204,11 @@ GK_stats %>% arrange(GK_Score, descending = T)
 
 colnames(PLAYER_tourn_res_2021)[2] <- "Nation"
 team_stats <- merge(merge(merge(merge(MF_stats, DF_stats), FW_stats), GK_stats),PLAYER_tourn_res_2021)
+total_score <- team_stats$FW_Score*2/11 + team_stats$MF_Score*4/11 + team_stats$DF_Score*4/11 + team_stats$GK_Score*1/11
 
+team_stats <- cbind(team_stats,total_score)
 
+plot(team_stats$`2021 Tournament Place`, team_stats$total_score)
 #PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
 #Group by tournament team, average salary for each role (FW, MF, DF, GK score, overall average sal) (relo between scores and placement - classification model)
 #Either clasify ranks directly, 1 beats 2,3,4,5 -> Response Win/Loss (these attributes beat other attributes -> "Win" -> 60% chance of win
