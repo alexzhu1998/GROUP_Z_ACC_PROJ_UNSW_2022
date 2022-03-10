@@ -4,6 +4,7 @@ load("data/cor_df.RData")
 load("data/tourn_merge.Rdata")
 load("data/gk_df.RData")
 load("data/gk_tourn_df.RData")
+load("data/tournament_result.RData")
 
 library(dplyr)
 library(gbm)
@@ -201,8 +202,8 @@ GK_stats <- GK_tourn_df %>%
     summarise(GK_Score = mean(gbm.tourn_GK))
 GK_stats %>% arrange(GK_Score, descending = T)
 
-
-team_stats <- merge(merge(merge(MF_stats, DF_stats), FW_stats), GK_stats)
+colnames(PLAYER_tourn_res_2021)[2] <- "Nation"
+team_stats <- merge(merge(merge(merge(MF_stats, DF_stats), FW_stats), GK_stats),PLAYER_tourn_res_2021)
 
 
 #PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
