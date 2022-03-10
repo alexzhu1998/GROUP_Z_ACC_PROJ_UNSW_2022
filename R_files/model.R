@@ -154,15 +154,45 @@ plot(gbm.predict_GK[(df['League'] != "RFL")], gk_df$Annualized_Salary[(df['Leagu
 
 
 
-
-
-
-
 #Actual salary histograms
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "DF")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], breaks = 20)
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "MF")], breaks = 20)
 hist(gk_df$Annualized_Salary[(gk_df['League'] != "RFL")], breaks = 20)
+
+
+## Apply model to tournament data, obtain national team "scores"
+
+gbm.tourn_MF = predict(gbmFit_MF, newdata = cor_tourn_merge[,-c(17,19,20,21,22,23)], n.trees = min_MF, type = "response")
+gbm.tourn_DF = predict(gbmFit_DF, newdata = cor_tourn_merge[,-c(17,19,20,21,22,23)], n.trees = min_DF, type = "response")
+gbm.tourn_FW = predict(gbmFit_FW, newdata = cor_tourn_merge[,-c(17,19,20,21,22,23)], n.trees = min_FW, type = "response")
+
+MF_tourn <- cbind(cor_tourn_merge[,c(19,20,21)], gbm.tourn_MF)
+MF_tourn_df <- MF_tourn %>%
+    filter(Pos_new == "MF")
+
+MF_stats <- MF_tourn_df %>%
+    group_by(Nation) %>%
+    summarise(MF_Score = mean(gbm.tourn_MF))
+MF_stats %>% arrange(MF_Score,descending = T)
+
+DF_tourn <- cbind(cor_tourn_merge[,c(19,20,21)], gbm.tourn_DF)
+DF_tourn_df <- DF_tourn %>%
+    filter(Pos_new == "DF")
+
+DF_stats <- DF_tourn_df %>%
+    group_by(Nation) %>%
+    summarise(DF_Score = mean(gbm.tourn_DF))
+DF_stats %>% arrange(DF_Score,descending = T)
+
+FW_tourn <- cbind(cor_tourn_merge[,c(19,20,21)], gbm.tourn_FW)
+FW_tourn_df <- FW_tourn %>%
+    filter(Pos_new == "FW")
+
+FW_stats <- FW_tourn_df %>%
+    group_by(Nation) %>%
+    summarise(FW_Score = mean(gbm.tourn_FW))
+FW_stats %>% arrange(FW_Score,descending = T)
 
 
 #PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
@@ -174,7 +204,7 @@ hist(gk_df$Annualized_Salary[(gk_df['League'] != "RFL")], breaks = 20)
 
 #Pick a bunch of players that we look at data and say "that might be economical" -> score -> spit out probability -> threshold for our object
 
-#
+
 
 
 
