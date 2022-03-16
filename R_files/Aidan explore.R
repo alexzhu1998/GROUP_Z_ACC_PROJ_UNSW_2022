@@ -29,6 +29,10 @@ winning_teams <- c('Sobianitedrucy',
                   'Eastern Niasland',
                   'Varijitri Isles')
 
+
+df %>%
+    filter(League == "RFL")
+
 attach(df)    
 #Linear regression analaysis
 pos_df <- df %>%
