@@ -49,20 +49,20 @@ FW_RFL %>% arrange(Diff,descending = T)
 
 #Fit boosting model on annualised salary dataset with non RFL football leagues and ALL predictors
 set.seed(1)
-colnames(df)[c(1,2,3,4,5,70)]
+colnames(df)[c(1,2,3,4,5,71)]
 
-gbmFit.param <- gbm(Annualized_Salary ~., data = df[df['League'] != "RFL",-c(1,2,3,4,5,70)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param <- gbm(Annualized_Salary ~., data = df[df['League'] != "RFL",-c(1,2,3,4,5,71)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param
 
 min <- which.min(gbmFit.param$cv.error)
 min
 gbm.perf(gbmFit.param, method = "cv")
 
-gbmFit <- gbm(Annualized_Salary ~., df[df['League'] != "RFL",-c(1,2,3,4,5,70)], distribution = "gaussian", n.trees = min, interaction.depth = 1, shrinkage = 0.01)
+gbmFit <- gbm(Annualized_Salary ~., df[df['League'] != "RFL",-c(1,2,3,4,5,71)], distribution = "gaussian", n.trees = min, interaction.depth = 1, shrinkage = 0.01)
 
 summary(gbmFit)
 
-gbm.predict = predict(gbmFit, newdata = df[,-c(1,2,3,4,5,70,70)], n.trees = min, type = "response")
+gbm.predict = predict(gbmFit, newdata = df[,-c(1,2,3,4,5,70,71)], n.trees = min, type = "response")
 
 
 plot(gbm.predict[(df['League'] != "RFL")], df$Annualized_Salary[(df['League'] != "RFL")])
