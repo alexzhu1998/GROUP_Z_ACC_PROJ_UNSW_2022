@@ -53,7 +53,7 @@ nonRFL <- filter(df,League != "RFL")
 RFL <- filter(df,League == "RFL")
 
 ###### SAVING INTO MODEL.R
-save(RFL,nonRFL,file = "data/model.RData")
+# save(RFL,nonRFL,file = "data/model.RData")
 
 
 
@@ -111,7 +111,7 @@ cormat <- cor(temp_df[48:67], method = "pearson")
 corrplot(cormat, method = "number")
 
 cor_df <- df[,keep_player]
-save(cor_df, file = "data/cor_df.RData")
+# save(cor_df, file = "data/cor_df.RData")
 cormat <- cor(cor_df, method = "pearson")
 corrplot(cormat, method = "number")
 
@@ -123,7 +123,7 @@ cormat <- cor(temp_df, method = "pearson")
 corrplot(cormat, method = "number")
 
 gk_df <- PLAYER_league_goal_salary[,c(keep_goal,"Player","Nation","League","Squad","Country")]
-save(gk_df, file = "data/gk_df.RData")
+# save(gk_df, file = "data/gk_df.RData")
 ##Distribution of salary (including RFL)
 ggplot(df)+
     geom_histogram(aes(x = Annualized_Salary, y = ..density..), color = "black", fill="#33AFFF")+
@@ -132,7 +132,7 @@ ggplot(df)+
     theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=16, face = "bold"), plot.subtitle=element_text(size=13))
 
 
-save(df,file = "data/model2.RData")
+# save(df,file = "data/model2.RData")
 
 #Check expected goals per position
 for (level in pos) {
@@ -147,9 +147,30 @@ boxplot(`Standard_Sh/90` ~ Pos_new, data = df)
 
 #Make Player_tourn_non_goal same columns as cor_df
 player_tourn_df <- PLAYER_tourn_non_goal[,keep_player[!keep_player == 'Annualized_Salary']]
-save(player_tourn_df, file = "data/player_tourn_df.RData")
+# save(player_tourn_df, file = "data/player_tourn_df.RData")
 
 
 #Make Player_tourn_goal same columns as goal_df
 gk_tourn_df <- PLAYER_tourn_goal[keep_goal[!keep_goal == 'Annualized_Salary']]
-save(gk_tourn_df, file = "data/gk_tourn_df.RData")
+# save(gk_tourn_df, file = "data/gk_tourn_df.RData")
+
+
+# Metric exploration ------------------------------------------------------
+path <- 'Graphs'
+width <- 600
+height <- 500
+#Box plot on xG xA
+player.traits <- c('Expected_xG','xA','Tackles_Tkl','Int','Standard_Sh/90')
+
+for (trait in player.traits) {
+    
+    temp.df <- df%>% filter(Pos_new != 'GK')
+    
+    png(filename = paste0(path,'/',trait,'boxplot.png'), width = width, height = height)
+    boxplot(eval(parse(text = trait)) ~ Pos_new, data = temp.df, main = paste0(trait,' Box plot'),
+            ylab = trait)
+    dev.off()
+    
+}
+
+boxplot(`Standard_Sh/90` ~ Pos_new, data = temp.df)
