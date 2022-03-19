@@ -267,6 +267,9 @@ rarita.gk <- gk.salary %>%
     mutate(salary.ratio = gbm.predict_GK/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
 
+
+#Make football team
+
 #PDP graphs
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
 par.df.DF <- partial(gbmFit_DF, pred.var = c('xA'), n.trees = min_DF)
