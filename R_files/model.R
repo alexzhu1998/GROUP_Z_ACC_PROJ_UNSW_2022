@@ -7,7 +7,9 @@ load("data/gk_tourn_df.RData")
 load("data/tournament_result.RData")
 
 library(dplyr)
+library(ggplot2)
 library(gbm)
+library(pdp)
 # LINEAR REGRESSION
 
 
@@ -253,6 +255,65 @@ mean(gbm.match.predict[247:492])
 
 
 
+# Raritian players updated table ------------------------------------------
+gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
+column.names <- c('Player','Annualized_Salary','Expected_Salary','Salary_Ratio')
+player.names <- cor_df_merge[,c('Player','Annualized_Salary','Pos_new','Nation')]
 
+# for (vector in gbm.vector) {
+#     
+#     player.names <- cbind(player.names, )
+# }
 
+#Field players
+player.salary <- cbind(player.names, gbm.predict_DF)
+player.salary <- cbind(player.salary, gbm.predict_MF)
+player.salary <- cbind(player.salary, gbm.predict_FW)
 
+#Filter out RFL players
+rarita.players <- player.salary %>% filter(Nation == 'Rarita')
+
+rarita.mf <- rarita.players %>%
+    filter(Pos_new == 'MF') %>%
+    select(Player, Annualized_Salary, gbm.predict_MF)%>%
+    mutate(salary.ratio = gbm.predict_MF/Annualized_Salary)%>%
+    arrange(desc(salary.ratio))
+
+rarita.df <- rarita.players %>%
+    filter(Pos_new == 'DF') %>%
+    select(Player, Annualized_Salary, gbm.predict_DF)%>%
+    mutate(salary.ratio = gbm.predict_DF/Annualized_Salary)%>%
+    arrange(desc(salary.ratio))
+
+rarita.fw <- rarita.players %>%
+    filter(Pos_new == 'FW') %>%
+    select(Player, Annualized_Salary, gbm.predict_FW)%>%
+    mutate(salary.ratio = gbm.predict_FW/Annualized_Salary)%>%
+    arrange(desc(salary.ratio))
+
+#Goalkeepers
+goalkeepers <- gk_df[,c('Player','Annualized_Salary','Nation')]
+gk.salary <- cbind(goalkeepers, gbm.predict_GK)
+rarita.gk <- gk.salary %>%
+    filter(Nation == 'Rarita')%>%
+    select(Player, Annualized_Salary, gbm.predict_GK)%>%
+    mutate(salary.ratio = gbm.predict_GK/Annualized_Salary)%>%
+    arrange(desc(salary.ratio))
+
+colnames(rarita.df) <- column.names
+colnames(rarita.mf) <- column.names
+colnames(rarita.fw) <- column.names
+colnames(rarita.gk) <- column.names
+
+#Make football team
+#pick 3 goalkeepers, 7 df, 7 mf, 5fw
+national.team <- rarita.gk[6:8,]
+national.team <- rbind(national, rarita.df[1:7,])
+national.team <- rbind(national, rarita.mf[1:7,])
+national.team <- rbind(national, rarita.fw[1:5,])
+
+#PDP graphs
+par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
+par.df.DF <- partial(gbmFit_DF, pred.var = c('xA'), n.trees = min_DF)
+par.df.DF <- partial(gbmFit_DF, pred.var = c('Tackles_Tkl'), n.trees = min_DF)
+autoplot(par.df.DF, contour = TRUE)

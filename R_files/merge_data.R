@@ -50,7 +50,7 @@ names(PLAYER_salary)[names(PLAYER_salary) == "Player Name"] <- "Player"
 
 
 # setdiff(unique(select(PLAYER_salary, c("Player Name","Year","League"))),
-overlapping_cols2 <- c("Player","Year","League","Squad")
+overlapping_cols2 <- c("Player","Year","Squad")
 setdiff(unique(select(PLAYER_salary, overlapping_cols2)),
         unique(select(PLAYER_league_non_goal, overlapping_cols2)))
 
