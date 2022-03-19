@@ -1,4 +1,4 @@
-load("data/all_raw_data.RData")
+source("R_files/convert_excel_to_r.R")
 
 #### Libraries ####
 library(tidyverse)

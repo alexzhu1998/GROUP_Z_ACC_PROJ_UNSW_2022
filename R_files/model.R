@@ -1,15 +1,13 @@
-load("data/model.RData")
-load("data/model2.RData")
-load("data/cor_df.RData")
-load("data/tourn_merge.Rdata")
-load("data/gk_df.RData")
-load("data/gk_tourn_df.RData")
-load("data/tournament_result.RData")
+source("R_files/Annie's preprocessing.R")
+source("R_files/filter_pipeline_exploratory.R")
+PLAYER_tourn_res_2020 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "B11:C27")
+PLAYER_tourn_res_2021 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "E11:F35")
 
 library(dplyr)
 library(ggplot2)
 library(gbm)
 library(pdp)
+library(readxl)
 # LINEAR REGRESSION
 
 

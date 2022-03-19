@@ -1,4 +1,4 @@
-load("data/merged_tourn.RData")
+source("R_files/merge_data.R")
 
 
 colnames(PLAYER_tourn_non_goal) <- gsub(" ","_", colnames(PLAYER_tourn_non_goal))

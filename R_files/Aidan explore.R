@@ -1,3 +1,5 @@
+source("R_files/merge_data.R")
+
 #Analysing other team compositions
 df <- PLAYER_tourn_non_goal
 #df_2020 <- df %>% filter(Year == 2020)

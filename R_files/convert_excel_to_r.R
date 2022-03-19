@@ -37,5 +37,4 @@ PLAYER_tourn_goal <- read_excel("data/player-modified.xlsx",sheet = "Tournament 
 PLAYER_salary2020 <- read_excel("data/player-modified.xlsx",sheet = "2020 Salaries",range= "B12:G2744")
 PLAYER_salary2021 <- read_excel("data/player-modified.xlsx",sheet = "2021 Salaries",range= "B12:G2834")
 
-save.image(file="data/all_raw_data.RData") 
-save(PLAYER_tourn_res_2020,PLAYER_tourn_res_2021,file="data/tournament_result.RData")
+# save.image(file="data/all_raw_data.RData") 

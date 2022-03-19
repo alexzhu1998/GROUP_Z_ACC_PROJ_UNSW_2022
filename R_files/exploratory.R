@@ -1,5 +1,4 @@
-load("data/merged_league.RData")
-load("data/merged_tourn.RData")
+source("R_files/merge_data.R")
 
 library(dplyr)
 library(corrplot)

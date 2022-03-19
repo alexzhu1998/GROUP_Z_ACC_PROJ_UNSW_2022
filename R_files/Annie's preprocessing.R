@@ -1,4 +1,4 @@
-
+source("R_files/merge_data.R")
 vec_of_attr <- c("Total_Cmp%", 
                  "Short_Cmp%", 
                  "Medium_Cmp%", 
@@ -68,6 +68,8 @@ keep <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
 cor_tourn_merge <- cor_tourn_merge[,keep]
 
 
-save(cor_tourn_merge,file = "data/tourn_merge.RData")
+#### Remove Data except the following #####
+rm(list= ls()[! (ls() %in% c('cor_tourn_merge'))])
+# save(cor_tourn_merge,file = "data/tourn_merge.RData")
 
 

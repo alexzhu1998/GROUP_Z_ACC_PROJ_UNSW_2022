@@ -1,4 +1,4 @@
-load("data/all_raw_data.RData")
+source("R_files/convert_excel_to_r.R")
 
 
 ##### Load Packages #####
@@ -57,8 +57,9 @@ setdiff(unique(select(PLAYER_salary, overlapping_cols2)),
 PLAYER_league_non_goal_salary <- left_join(
     x = PLAYER_league_non_goal,
     y = PLAYER_salary,
-    by = overlapping_cols2
+    by = c(overlapping_cols2,"League")
 )
+
 
 PLAYER_league_goal_salary <- left_join(
     x = PLAYER_league_goal,
@@ -66,6 +67,8 @@ PLAYER_league_goal_salary <- left_join(
     by = overlapping_cols2
 )
 
+PLAYER_league_goal_salary$League.x <- NULL
+colnames(PLAYER_league_goal_salary)[which(colnames(PLAYER_league_goal_salary)=="League.y")] <- "League"
 
 # data_to_remove <- c(dats,"PLAYER_league_non_goal", "PLAYER_salary", "PLAYER_salary2020", "PLAYER_salary2021")
 # rm(list = list(data_to_remove)[[1]])
@@ -113,14 +116,14 @@ stopifnot(count(PLAYER_tourn_non_goal) == count(PLAYER_tourn_def))
 
 
 
-PLAYER_tourn_res["Year"] <- 2020
-colnames(PLAYER_tourn_res)[c(1,2)] <- c("Places","Nation")
+PLAYER_tourn_res_2020["Year"] <- 2020
+colnames(PLAYER_tourn_res_2020)[c(1,2)] <- c("Places","Nation")
 
 
-PLAYER_tourn_res2["Year"] <- 2021
-colnames(PLAYER_tourn_res2)[c(1,2)] <- c("Places","Nation")
+PLAYER_tourn_res_2021["Year"] <- 2021
+colnames(PLAYER_tourn_res_2021)[c(1,2)] <- c("Places","Nation")
 
-PLAYER_tourn_res_all <- rbind(PLAYER_tourn_res,PLAYER_tourn_res2)
+PLAYER_tourn_res_all <- rbind(PLAYER_tourn_res_2020,PLAYER_tourn_res_2021)
 
 PLAYER_tourn_non_goal <- left_join(x = PLAYER_tourn_non_goal,
                                     y = PLAYER_tourn_res_all,
@@ -167,7 +170,6 @@ preprocessing <- function(df,ninetysec = F, position = F) {
         df$`90s_avg` <- ifelse(df$`90s_avg` < 0.1,0,df$`90s_avg`)
         df <- filter(df,`90s_avg` > 0) # got rid of all negative 90s ppl
         df[vec_of_attr] <- df[vec_of_attr]/df$`90s_avg`    
-        df <- df %>% select(-c("90s","90s.x","90s.y"))
     }
     # Replaced all negative values with 0
     for (c in colnames(df))
@@ -182,6 +184,8 @@ preprocessing <- function(df,ninetysec = F, position = F) {
     
 }
 
+
+
 PLAYER_tourn_goal <- preprocessing(PLAYER_tourn_goal)
 PLAYER_tourn_non_goal <- preprocessing(PLAYER_tourn_non_goal,ninetysec=T)
 PLAYER_league_non_goal_salary <- preprocessing(PLAYER_league_non_goal_salary,ninetysec=T,position = T)
@@ -193,12 +197,15 @@ PLAYER_league_goal_salary <- preprocessing(PLAYER_league_goal_salary,position = 
 
 
 
-#### Remove Useless Data #####
-# data_to_remove <- c(dats2,"PLAYER_tourn_shoot")
-# rm(list = list(data_to_remove)[[1]])
+#### Remove Data except the following #####
+rm(list= ls()[! (ls() %in% c('PLAYER_tourn_goal',
+                             'PLAYER_tourn_non_goal',
+                             'PLAYER_league_non_goal_salary',
+                             'PLAYER_league_goal_salary'))])
 
-save(PLAYER_tourn_goal,PLAYER_tourn_non_goal, file = "data/merged_tourn.RData")
-save(PLAYER_league_non_goal_salary,PLAYER_league_goal_salary, file = "data/merged_league.RData")
+# save(PLAYER_tourn_goal,PLAYER_tourn_non_goal, file = "data/merged_tourn.RData")
+# save(PLAYER_league_non_goal_salary,PLAYER_league_goal_salary, file = "data/merged_league.RData")
+
 
 
 
