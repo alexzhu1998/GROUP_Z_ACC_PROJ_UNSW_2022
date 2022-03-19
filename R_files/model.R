@@ -224,7 +224,7 @@ plot(team_stats$`2021 Tournament Place`, team_stats$total_score)
 
 # Raritian players updated table ------------------------------------------
 gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
-
+column.names <- c('Player','Annualized_Salary','Expected_Salary','Salary_Ratio')
 player.names <- cor_df_merge[,c('Player','Annualized_Salary','Pos_new','Nation')]
 
 # for (vector in gbm.vector) {
@@ -267,13 +267,17 @@ rarita.gk <- gk.salary %>%
     mutate(salary.ratio = gbm.predict_GK/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
 
+colnames(rarita.df) <- column.names
+colnames(rarita.mf) <- column.names
+colnames(rarita.fw) <- column.names
+colnames(rarita.gk) <- column.names
 
 #Make football team
 #pick 3 goalkeepers, 7 df, 7 mf, 5fw
-national <- rarita.gk[3,]
-national <- rbind(national, rarita.df[7,])
-national <- rbind(national, rarita.mf[7,])
-national <- rbind(national, rarita.fw[5,])
+national <- rarita.gk[6:8,]
+national <- rbind(national, rarita.df[1:7,])
+national <- rbind(national, rarita.mf[1:7,])
+national <- rbind(national, rarita.fw[1:5,])
 
 #PDP graphs
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
