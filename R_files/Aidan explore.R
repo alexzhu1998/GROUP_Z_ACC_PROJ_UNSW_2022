@@ -67,3 +67,5 @@ c <- summary(lm)
 coeff_table <- c$coefficients
 colnames(coeff_table)[4] <- "p_value"
 coeff_table[coeff_table[,"p_value"]<0.05,]
+
+temp <- df %>% filter(Nation == 'Rarita') %>% summarise(average = mean(Annualized_Salary))
