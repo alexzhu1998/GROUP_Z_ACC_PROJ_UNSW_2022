@@ -7,7 +7,9 @@ load("data/gk_tourn_df.RData")
 load("data/tournament_result.RData")
 
 library(dplyr)
+library(ggplot2)
 library(gbm)
+library(pdp)
 # LINEAR REGRESSION
 
 
@@ -264,3 +266,9 @@ rarita.gk <- gk.salary %>%
     select(Player, Annualized_Salary, gbm.predict_GK)%>%
     mutate(salary.ratio = gbm.predict_GK/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
+
+#PDP graphs
+par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
+par.df.DF <- partial(gbmFit_DF, pred.var = c('xA'), n.trees = min_DF)
+par.df.DF <- partial(gbmFit_DF, pred.var = c('Tackles_Tkl'), n.trees = min_DF)
+autoplot(par.df.DF, contour = TRUE)
