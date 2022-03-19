@@ -260,11 +260,6 @@ gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
 column.names <- c('Player','Annualized_Salary','Expected_Salary','Salary_Ratio')
 player.names <- cor_df_merge[,c('Player','Annualized_Salary','Pos_new','Nation')]
 
-# for (vector in gbm.vector) {
-#     
-#     player.names <- cbind(player.names, )
-# }
-
 #Field players
 player.salary <- cbind(player.names, gbm.predict_DF)
 player.salary <- cbind(player.salary, gbm.predict_MF)
@@ -311,6 +306,7 @@ national.team <- rarita.gk[6:8,]
 national.team <- rbind(national.team, rarita.df[1:7,])
 national.team <- rbind(national.team, rarita.mf[1:7,])
 national.team <- rbind(national.team, rarita.fw[1:5,])
+
 
 #PDP graphs
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
