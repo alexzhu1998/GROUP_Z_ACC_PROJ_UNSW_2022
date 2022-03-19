@@ -207,8 +207,41 @@ team_stats <- merge(merge(merge(merge(MF_stats, DF_stats), FW_stats), GK_stats),
 total_score <- team_stats$FW_Score*2/11 + team_stats$MF_Score*4/11 + team_stats$DF_Score*4/11 + team_stats$GK_Score*1/11
 
 team_stats <- cbind(team_stats,total_score)
+team_stats <- team_stats %>% arrange(`2021 Tournament Place`, descending = T)
 
-plot(team_stats$`2021 Tournament Place`, team_stats$total_score)
+plot(team_stats$`2021 Tournament Place`, team_stats$DF_score)
+
+#write.csv(team_stats,"data/match_model_data.csv")
+
+model_data <- read.csv("data/match_model.csv")
+
+model_data$Outcome[model_data$Outcome == "Win"] <- 1
+model_data$Outcome[model_data$Outcome == "Lose"] <- 0
+model_data$Outcome <- as.numeric(model_data$Outcome)
+summary(model_data)
+model_data <- as.data.frame(model_data)
+
+summary(model_data[,-c(2,3,4,5)])
+
+#Fit gradient booster to link scores with match outcomes
+gbmMatch_param <- gbm(Outcome ~., data = model_data[,-c(2,3,4,5)], distribution = "bernoulli", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmMatch_param
+
+min_match_param <- which.min(gbmMatch_param$cv.error)
+min_match_param
+gbm.perf(gbmMatch_param, method = "cv")
+
+gbm_match <- gbm(Outcome ~., data = model_data[,-c(2,3,4,5)], distribution = "bernoulli", n.trees = min_match_param, interaction.depth = 1, shrinkage = 0.01)
+
+summary(gbm_match)
+
+gbm.match.predict = predict(gbm_match, newdata = model_data[,-c(1,2,3,4,5)], n.trees = min_match_param, type = "response")
+
+mean(gbm.match.predict[1:246])
+mean(gbm.match.predict[247:492])
+
+
+
 #PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
 #Group by tournament team, average salary for each role (FW, MF, DF, GK score, overall average sal) (relo between scores and placement - classification model)
 #Either clasify ranks directly, 1 beats 2,3,4,5 -> Response Win/Loss (these attributes beat other attributes -> "Win" -> 60% chance of win
