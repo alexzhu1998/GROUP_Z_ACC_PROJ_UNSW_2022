@@ -272,10 +272,10 @@ colnames(rarita.gk) <- column.names
 
 #Make football team
 #pick 3 goalkeepers, 7 df, 7 mf, 5fw
-national.team <- rarita.gk[6:8,]
-national.team <- rbind(national, rarita.df[1:7,])
-national.team <- rbind(national, rarita.mf[1:7,])
-national.team <- rbind(national, rarita.fw[1:5,])
+national.team <- rarita.gk[1:3,]
+national.team <- rbind(national.team, rarita.df[1:7,])
+national.team <- rbind(national.team, rarita.mf[1:7,])
+national.team <- rbind(national.team, rarita.fw[1:5,])
 
 #PDP graphs
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
