@@ -269,6 +269,11 @@ rarita.gk <- gk.salary %>%
 
 
 #Make football team
+#pick 3 goalkeepers, 7 df, 7 mf, 5fw
+national <- rarita.gk[3,]
+national <- rbind(national, rarita.df[7,])
+national <- rbind(national, rarita.mf[7,])
+national <- rbind(national, rarita.fw[5,])
 
 #PDP graphs
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
