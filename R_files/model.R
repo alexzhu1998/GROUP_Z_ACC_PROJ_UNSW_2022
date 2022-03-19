@@ -10,8 +10,8 @@ library(dplyr)
 library(ggplot2)
 library(gbm)
 library(pdp)
-# LINEAR REGRESSION
 
+# LINEAR REGRESSION
 
 cols_to_remove <- c("Pos_new","Player","Nation","League","Squad")
 pos_levels <- c("MF","DF","FW")
@@ -308,9 +308,9 @@ colnames(rarita.gk) <- column.names
 #Make football team
 #pick 3 goalkeepers, 7 df, 7 mf, 5fw
 national.team <- rarita.gk[6:8,]
-national.team <- rbind(national, rarita.df[1:7,])
-national.team <- rbind(national, rarita.mf[1:7,])
-national.team <- rbind(national, rarita.fw[1:5,])
+national.team <- rbind(national.team, rarita.df[1:7,])
+national.team <- rbind(national.team, rarita.mf[1:7,])
+national.team <- rbind(national.team, rarita.fw[1:5,])
 
 #PDP graphs
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
