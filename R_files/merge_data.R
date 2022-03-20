@@ -200,8 +200,7 @@ PLAYER_league_non_goal_salary <- PLAYER_league_non_goal_salary %>% select(-c("90
 stopifnot(nrow(PLAYER_league_non_goal_salary) == 5500 && 
               ncol(PLAYER_league_non_goal_salary) == 72)
 
-stopifnot(nrow(PLAYER_league_goal_salary) == 413 &&
-              ncol(PLAYER_league_goal_salary) == 28)
+
 
 
 ori_col_PLNGS <- c('Player','Year','League','Squad','Nation','Age','Born','Tackles_Tkl','Tackles_TklW','Tackles_Def_3rd','Tackles_Mid_3rd','Tackles_Att_3rd','Vs_Dribbles_Tkl','Vs_Dribbles_Att','Vs_Dribbles_Tkl%','Vs_Dribbles_Past','Pressures_Press','Pressures_Succ','Pressures_%','Pressures_Def_3rd','Pressures_Mid_3rd','Pressures_Att_3rd','Blocks_Blocks','Blocks_Sh','Blocks_ShSv','Blocks_Pass','Int','Tkl+Int','Clr','Err','Total_Cmp','Total_Att','Total_Cmp%','Total_TotDist','Total_PrgDist','Short_Cmp','Short_Att','Short_Cmp%','Medium_Cmp','Medium_Att','Medium_Cmp%','Long_Cmp','Long_Att','Long_Cmp%','Ast','xA','A-xA','KP','1/3','PPA','CrsPA','Prog','Gls','Standard_Sh','Standard_SoT','Standard_SoT%','Standard_Sh/90','Standard_SoT/90','Standard_G/Sh','Standard_G/SoT','Standard_Dist','Standard_FK','Performance_PK','Performance_PKatt','Expected_xG','Expected_npxG','Expected_npxG/Sh','Expected_G-xG','Expected_np:G-xG','Annualized_Salary','Pos_new','90s_avg')

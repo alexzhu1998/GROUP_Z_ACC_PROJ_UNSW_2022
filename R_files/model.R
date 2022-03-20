@@ -11,7 +11,7 @@ library(readxl)
 
 ### Checks 
 
-stopifnot()
+
 
 
 # LINEAR REGRESSION
