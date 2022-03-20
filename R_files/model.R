@@ -256,8 +256,8 @@ mean(gbm.match.predict[247:492])
 
 
 # Raritian players updated table ------------------------------------------
-gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
 column.names <- c('Player','Annualized_Salary','Expected_Salary', 'Pos_new', 'Salary_Ratio')
+select.quantile <- 0.75
 
 # gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
 player.names <- cor_df_merge[,c('Player','Annualized_Salary','Pos_new','Nation')]
@@ -273,18 +273,21 @@ rarita.players <- player.salary %>% filter(Nation == 'Rarita')
 
 rarita.mf <- rarita.players %>%
     filter(Pos_new == 'MF') %>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)%>%
     select(Player, Annualized_Salary, gbm.predict_MF, Pos_new)%>%
     mutate(salary.ratio = gbm.predict_MF/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
 
 rarita.df <- rarita.players %>%
     filter(Pos_new == 'DF') %>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)%>%
     select(Player, Annualized_Salary, gbm.predict_DF, Pos_new)%>%
     mutate(salary.ratio = gbm.predict_DF/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
 
 rarita.fw <- rarita.players %>%
     filter(Pos_new == 'FW') %>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)%>%
     select(Player, Annualized_Salary, gbm.predict_FW, Pos_new)%>%
     mutate(salary.ratio = gbm.predict_FW/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
@@ -294,6 +297,7 @@ goalkeepers <- gk_df[,c('Player','Annualized_Salary','Nation')]
 gk.salary <- cbind(goalkeepers, gbm.predict_GK)
 rarita.gk <- gk.salary %>%
     filter(Nation == 'Rarita')%>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)%>%
     select(Player, Annualized_Salary, gbm.predict_GK)%>%
     mutate(salary.ratio = gbm.predict_GK/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
@@ -310,7 +314,7 @@ colnames(rarita.gk) <- column.names
 #Make football team
 #pick 3 goalkeepers, 7 df, 7 mf, 5fw
 
-national.team <- rarita.gk[6:8,]
+national.team <- rarita.gk[1:3,]
 national.team <- rbind(national.team, rarita.df[1:7,])
 national.team <- rbind(national.team, rarita.mf[1:7,])
 national.team <- rbind(national.team, rarita.fw[1:5,])
