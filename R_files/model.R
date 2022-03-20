@@ -215,7 +215,7 @@ plot(team_stats$`2021 Tournament Place`, team_stats$DF_score)
 
 # write.csv(team_stats,"data/match_model_data.csv")
 
-# model_data <- read.csv("data/match_model.csv")
+model_data <- read.csv("data/match_model.csv")
 
 model_data$Outcome[model_data$Outcome == "Win"] <- 1
 model_data$Outcome[model_data$Outcome == "Lose"] <- 0
@@ -287,6 +287,7 @@ rarita.df <- rarita.players %>%
 
 rarita.fw <- rarita.players %>%
     filter(Pos_new == 'FW') %>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)
     select(Player, Annualized_Salary, gbm.predict_FW, Pos_new)%>%
     mutate(salary.ratio = gbm.predict_FW/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
@@ -334,11 +335,6 @@ national.team.stats <- national.team %>%
 
 
 
-#Cost of league (player salaries) - ECON model
-sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
-
-
-
 national.team.stats[1,2]*1/11+ national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + national.team.stats[4,2]*2/11
 
 
@@ -346,6 +342,16 @@ final.national.team <- national.team.stats%>%
     add_row(Pos_new = "Total", Score = (national.team.stats[1,2]*1/11 
             + national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + 
                 national.team.stats[4,2]*2/11))
+
+national.team.matchups <- read.csv("data/match_model_data_rarita.csv")
+
+
+national.team.predict = predict(gbm_match, newdata = national.team.matchups[,-c(1,2)], n.trees = min_match_param, type = "response")
+
+national.team.matchups <- cbind(national.team.matchups, Probs = national.team.predict)
+
+#Cost of league (player salaries) - ECON model
+sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
 
 
 
