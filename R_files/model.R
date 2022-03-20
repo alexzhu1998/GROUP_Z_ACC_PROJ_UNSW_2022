@@ -7,12 +7,6 @@ library(dplyr)
 library(ggplot2)
 library(gbm)
 library(pdp)
-library(readxl)
-
-### Checks 
-
-
-
 
 # LINEAR REGRESSION
 
