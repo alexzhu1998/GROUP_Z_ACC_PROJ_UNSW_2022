@@ -9,10 +9,7 @@ library(gbm)
 library(pdp)
 
 
-
-
 # LINEAR REGRESSION
-
 
 cols_to_remove <- c("Pos_new","Player","Nation","League","Squad")
 pos_levels <- c("MF","DF","FW")
@@ -139,7 +136,6 @@ hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], br
 plot(gbm.predict_FW[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")])
 plot(gbm.predict_FW[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")])
 
-
 #GK model
 gbmFit.param_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-c(16,17,18,19,20)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_GK
@@ -211,52 +207,77 @@ team_stats <- merge(merge(merge(merge(MF_stats, DF_stats), FW_stats), GK_stats),
 total_score <- team_stats$FW_Score*2/11 + team_stats$MF_Score*4/11 + team_stats$DF_Score*4/11 + team_stats$GK_Score*1/11
 
 team_stats <- cbind(team_stats,total_score)
+team_stats <- team_stats %>% arrange(`2021 Tournament Place`, descending = T)
 
-plot(team_stats$`2021 Tournament Place`, team_stats$total_score)
-#PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
-#Group by tournament team, average salary for each role (FW, MF, DF, GK score, overall average sal) (relo between scores and placement - classification model)
-#Either clasify ranks directly, 1 beats 2,3,4,5 -> Response Win/Loss (these attributes beat other attributes -> "Win" -> 60% chance of win
+plot(team_stats$`2021 Tournament Place`, team_stats$DF_score)
 
-# 1 vs (2 or 3)// 1 vs (4 or 5)// 1 vs 6,7,8, or 9, 1 vs 
-#Pr(At least one win) -> mess around with this probability to be convincing
+# write.csv(team_stats,"data/match_model_data.csv")
 
-#Pick a bunch of players that we look at data and say "that might be economical" -> score -> spit out probability -> threshold for our object
+model_data <- read.csv("data/match_model.csv")
+
+model_data$Outcome[model_data$Outcome == "Win"] <- 1
+model_data$Outcome[model_data$Outcome == "Lose"] <- 0
+model_data$Outcome <- as.numeric(model_data$Outcome)
+summary(model_data)
+model_data <- as.data.frame(model_data)
+
+summary(model_data[,-c(2,3,4,5)])
+
+#Fit gradient booster to link scores with match outcomes
+gbmMatch_param <- gbm(Outcome ~., data = model_data[,-c(2,3,4,5)], distribution = "bernoulli", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmMatch_param
+
+min_match_param <- which.min(gbmMatch_param$cv.error)
+min_match_param
+gbm.perf(gbmMatch_param, method = "cv")
+
+gbm_match <- gbm(Outcome ~., data = model_data[,-c(2,3,4,5)], distribution = "bernoulli", n.trees = min_match_param, interaction.depth = 1, shrinkage = 0.01)
+
+summary(gbm_match)
+
+gbm.match.predict = predict(gbm_match, newdata = model_data[,-c(1,2,3,4,5)], n.trees = min_match_param, type = "response")
+
+mean(gbm.match.predict[1:246])
+mean(gbm.match.predict[247:492])
+
+
 
 
 
 # Raritian players updated table ------------------------------------------
-gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
-column.names <- c('Player','Annualized_Salary','Expected_Salary','Salary_Ratio')
-player.names <- cor_df_merge[,c('Player','Annualized_Salary','Pos_new','Nation')]
+column.names <- c('Player','Annualized_Salary','Expected_Salary', 'Pos_new', 'Salary_Ratio')
+select.quantile <- 0.75
 
-# for (vector in gbm.vector) {
-#     
-#     player.names <- cbind(player.names, )
-# }
+# gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
+player.names <- cor_df_merge[,c('Player','Annualized_Salary','Pos_new','Nation')]
 
 #Field players
 player.salary <- cbind(player.names, gbm.predict_DF)
 player.salary <- cbind(player.salary, gbm.predict_MF)
 player.salary <- cbind(player.salary, gbm.predict_FW)
 
-#Filter out RFL players
+#Filter out RFL player
+
 rarita.players <- player.salary %>% filter(Nation == 'Rarita')
 
 rarita.mf <- rarita.players %>%
     filter(Pos_new == 'MF') %>%
-    select(Player, Annualized_Salary, gbm.predict_MF)%>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)%>%
+    select(Player, Annualized_Salary, gbm.predict_MF, Pos_new)%>%
     mutate(salary.ratio = gbm.predict_MF/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
 
 rarita.df <- rarita.players %>%
     filter(Pos_new == 'DF') %>%
-    select(Player, Annualized_Salary, gbm.predict_DF)%>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)%>%
+    select(Player, Annualized_Salary, gbm.predict_DF, Pos_new)%>%
     mutate(salary.ratio = gbm.predict_DF/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
 
 rarita.fw <- rarita.players %>%
     filter(Pos_new == 'FW') %>%
-    select(Player, Annualized_Salary, gbm.predict_FW)%>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary) %>%
+    select(Player, Annualized_Salary, gbm.predict_FW, Pos_new)%>%
     mutate(salary.ratio = gbm.predict_FW/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
 
@@ -265,17 +286,23 @@ goalkeepers <- gk_df[,c('Player','Annualized_Salary','Nation')]
 gk.salary <- cbind(goalkeepers, gbm.predict_GK)
 rarita.gk <- gk.salary %>%
     filter(Nation == 'Rarita')%>%
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)%>%
     select(Player, Annualized_Salary, gbm.predict_GK)%>%
     mutate(salary.ratio = gbm.predict_GK/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
 
+
+
 colnames(rarita.df) <- column.names
 colnames(rarita.mf) <- column.names
 colnames(rarita.fw) <- column.names
+rarita.gk <- cbind(rarita.gk, Pos_new = rep(c("GK")))
+rarita.gk <- rarita.gk[,c(1,2,3,5,4)]
 colnames(rarita.gk) <- column.names
 
 #Make football team
 #pick 3 goalkeepers, 7 df, 7 mf, 5fw
+
 national.team <- rarita.gk[1:3,]
 national.team <- rbind(national.team, rarita.df[1:7,])
 national.team <- rbind(national.team, rarita.mf[1:7,])
@@ -286,3 +313,108 @@ par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
 par.df.DF <- partial(gbmFit_DF, pred.var = c('xA'), n.trees = min_DF)
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Tackles_Tkl'), n.trees = min_DF)
 autoplot(par.df.DF, contour = TRUE)
+
+total_score <- team_stats$FW_Score*2/11 + team_stats$MF_Score*4/11 + team_stats$DF_Score*4/11 + team_stats$GK_Score*1/11
+
+
+national.team.stats <- national.team %>%
+    group_by(Pos_new) %>%
+    summarise(Score = mean(Expected_Salary))
+
+
+
+national.team.stats[1,2]*1/11+ national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + national.team.stats[4,2]*2/11
+
+
+final.national.team <- national.team.stats%>%
+    add_row(Pos_new = "Total", Score = (national.team.stats[1,2]*1/11 
+                                        + national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + 
+                                            national.team.stats[4,2]*2/11))
+
+national.team.matchups <- read.csv("data/match_model_data_rarita.csv")
+
+
+national.team.predict = predict(gbm_match, newdata = national.team.matchups[,-c(1,2)], n.trees = min_match_param, type = "response")
+
+national.team.matchups <- cbind(national.team.matchups, Probs = national.team.predict)
+
+#Our team vs [18,23],[12,17],[6,11],[1,5]
+
+set.seed(1)
+#Probability that our team is in the top 10 at least once within 5 years
+prob_top10_5yrs <- c()
+for (i in 1:1000) {
+    #successful outcome
+    sim_counter <- 0
+    #Calculate a single probability
+    for (j in 1:1000) {
+        win_two_match_prob <- national.team.matchups[floor(runif(5, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(5, min = 12, max = 17)),"Probs"]
+        #How many times I become top 10 in 5 yrs
+        count <- 0
+        
+        for (k in 1:5) {
+            count <- count + rbinom(1, 1, win_two_match_prob[k])
+        }
+        
+        if (count >= 1) {
+            sim_counter <- sim_counter + 1
+        }
+    }
+    
+    prob_top10_5yrs[i] <- sim_counter/1000
+}
+hist(prob_top10_5yrs)
+
+set.seed(1)
+#Probability that our team is in the top 10 for the majority of the time within 5 years
+prob_top10_5yrs_majority <- c()
+for (i in 1:1000) {
+    #successful outcome
+    sim_counter <- 0
+    #Calculate a single probability
+    for (j in 1:1000) {
+        win_two_match_prob <- national.team.matchups[floor(runif(5, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(5, min = 12, max = 18)),"Probs"]
+        #How many times I become top 10 in 5 yrs
+        count <- 0
+        
+        for (k in 1:5) {
+            count <- count + rbinom(1, 1, win_two_match_prob[k])
+        }
+        
+        if (count >= 3) {
+            sim_counter <- sim_counter + 1
+        }
+    }
+    
+    prob_top10_5yrs_majority[i] <- sim_counter/1000
+}
+hist(prob_top10_5yrs_majority)
+
+set.seed(1)
+#Probability that our team wins the championship at least once within 10 years
+prob_win_10yrs <- c()
+for (i in 1:1000) {
+    #successful outcome
+    sim_counter <- 0
+    #Calculate a single probability
+    for (j in 1:1000) {
+        win_prob <- national.team.matchups[floor(runif(10, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(10, min = 12, max = 18)),"Probs"]*national.team.matchups[floor(runif(10, min = 6, max = 12)),"Probs"]*national.team.matchups[floor(runif(10, min = 1, max = 6)),"Probs"]
+        #How many times I become top 10 in 5 yrs
+        count <- 0
+        
+        for (k in 1:10) {
+            count <- count + rbinom(1, 1, win_prob[k])
+        }
+        
+        if (count >= 1) {
+            sim_counter <- sim_counter + 1
+        }
+    }
+    
+    prob_win_10yrs[i] <- sim_counter/1000
+}
+hist(prob_win_10yrs)
+
+
+#Cost of league (player salaries) - ECON model
+sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
