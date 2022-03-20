@@ -2,12 +2,10 @@ source("R_files/Annie's preprocessing.R")
 source("R_files/filter_pipeline_exploratory.R")
 PLAYER_tourn_res_2020 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "B11:C27")
 PLAYER_tourn_res_2021 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "E11:F35")
-
 library(dplyr)
 library(ggplot2)
 library(gbm)
 library(pdp)
-
 
 # LINEAR REGRESSION
 
@@ -70,8 +68,7 @@ plot(gbm.predict[(df['League'] == "RFL")], df$Annualized_Salary[(df['League'] ==
 
 #New dataframe with correlated vairables removed + identifiable attributes
 cor_df_merge <- cbind(cor_df,df[,c("Player","Nation","Pos_new","League","Squad")])
-stopifnot((nrow(cor_df_merge) == 5500) && (length(colnames(cor_df_merge))== 23)) # Added check
-
+stopifnot((nrow(cor_df_merge) == 5500) && (length(colnames(cor_df_merge))== 23)) # Added check 
 #MF model
 gbmFit.param_MF <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_MF
@@ -308,6 +305,7 @@ national.team <- rbind(national.team, rarita.df[1:7,])
 national.team <- rbind(national.team, rarita.mf[1:7,])
 national.team <- rbind(national.team, rarita.fw[1:5,])
 
+
 #PDP graphs
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
 par.df.DF <- partial(gbmFit_DF, pred.var = c('xA'), n.trees = min_DF)
@@ -418,3 +416,4 @@ hist(prob_win_10yrs)
 
 #Cost of league (player salaries) - ECON model
 sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
+
