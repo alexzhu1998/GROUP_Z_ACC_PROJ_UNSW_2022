@@ -339,8 +339,6 @@ sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(
 
 
 
-
-
 national.team.stats[1,2]*1/11+ national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + national.team.stats[4,2]*2/11
 
 
