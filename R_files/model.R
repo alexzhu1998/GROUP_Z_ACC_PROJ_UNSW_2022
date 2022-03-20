@@ -213,7 +213,7 @@ team_stats <- team_stats %>% arrange(`2021 Tournament Place`, descending = T)
 
 plot(team_stats$`2021 Tournament Place`, team_stats$DF_score)
 
-write.csv(team_stats,"data/match_model_data.csv")
+# write.csv(team_stats,"data/match_model_data.csv")
 
 # model_data <- read.csv("data/match_model.csv")
 
@@ -325,11 +325,27 @@ par.df.DF <- partial(gbmFit_DF, pred.var = c('xA'), n.trees = min_DF)
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Tackles_Tkl'), n.trees = min_DF)
 autoplot(par.df.DF, contour = TRUE)
 
+total_score <- team_stats$FW_Score*2/11 + team_stats$MF_Score*4/11 + team_stats$DF_Score*4/11 + team_stats$GK_Score*1/11
 
 
 national.team.stats <- national.team %>%
     group_by(Pos_new) %>%
     summarise(Score = mean(Expected_Salary))
 
+<<<<<<< HEAD
 #Cost of league (player salaries) - ECON model
 sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
+=======
+national.team.stats[1,2]*1/11+ national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + national.team.stats[4,2]*2/11
+
+
+final.national.team <- national.team.stats%>%
+    add_row(Pos_new = "Total", Score = (national.team.stats[1,2]*1/11 
+            + national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + 
+                national.team.stats[4,2]*2/11))
+
+
+
+
+
+>>>>>>> e62ad5fac57841c046eab2e6b3b91eb2595109f6
