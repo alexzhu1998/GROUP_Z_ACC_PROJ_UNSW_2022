@@ -71,3 +71,30 @@ colnames(coeff_table)[4] <- "p_value"
 coeff_table[coeff_table[,"p_value"]<0.05,]
 
 temp <- df %>% filter(Nation == 'Rarita') %>% summarise(average = median(Annualized_Salary))
+
+#KPI pools of players
+rarita.players <- df %>% filter(Nation == 'Rarita')
+rarita.gk <- gk_df %>% filter(Nation == 'Rarita')
+
+#GK list -- good
+top.gk.rarita <- rarita.gk %>%
+    arrange(desc(`Performance_Save%`))%>%
+    top_n(20)
+
+#DF list
+top.df.rarita <- rarita.players%>%
+    filter(Pos_new == 'DF') %>%
+    arrange(desc(Clr))%>%
+    top_n(20)
+
+#MF list
+top.mf.rarita <- rarita.players%>%
+    filter(Pos_new == 'MF') %>%
+    arrange(desc(PPA))%>%
+    top_n(20)
+
+#FW list -- good
+top.fw.rarita <- rarita.players%>%
+    filter(Pos_new == 'FW') %>%
+    arrange(desc(Expected_xG))%>%
+    top_n(20)
