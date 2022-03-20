@@ -332,10 +332,15 @@ national.team.stats <- national.team %>%
     group_by(Pos_new) %>%
     summarise(Score = mean(Expected_Salary))
 
-<<<<<<< HEAD
+
+
 #Cost of league (player salaries) - ECON model
 sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
-=======
+
+
+
+
+
 national.team.stats[1,2]*1/11+ national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + national.team.stats[4,2]*2/11
 
 
@@ -347,5 +352,3 @@ final.national.team <- national.team.stats%>%
 
 
 
-
->>>>>>> e62ad5fac57841c046eab2e6b3b91eb2595109f6
