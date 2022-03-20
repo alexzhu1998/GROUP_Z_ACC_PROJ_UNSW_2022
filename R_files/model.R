@@ -265,7 +265,8 @@ player.salary <- cbind(player.names, gbm.predict_DF)
 player.salary <- cbind(player.salary, gbm.predict_MF)
 player.salary <- cbind(player.salary, gbm.predict_FW)
 
-#Filter out RFL players
+#Filter out RFL player
+
 rarita.players <- player.salary %>% filter(Nation == 'Rarita')
 
 rarita.mf <- rarita.players %>%
