@@ -42,7 +42,8 @@ keep_goal <- c("Player","Nation","Pos_new","League",'Age','Playing_Time_90s','Pe
 temp_df <- df%>% select(-c("Player","Nation","Pos_new","League","Squad"))
 cor_df <- df[,keep_player]
 
-gk_df <- PLAYER_league_goal_salary[,c(keep_goal,"Player","Nation","League","Squad","Country")]
+gk_df <- PLAYER_league_goal_salary[,c('Age','Playing_Time_90s','Performance_GA90','Performance_Saves','Performance_Save%','W','D','L','Performance_CS','Performance_CS%','Penalty_Kicks_PKA','Penalty_Kicks_PKsv','Penalty_Kicks_PKm','Penalty_Kicks_Save%','Annualized_Salary','Player','Nation','League','Squad','Country')]
+
 
 player_tourn_df <- PLAYER_tourn_non_goal[,keep_player[!keep_player == 'Annualized_Salary']]
 gk_tourn_df <- PLAYER_tourn_goal[keep_goal[!keep_goal == 'Annualized_Salary']]

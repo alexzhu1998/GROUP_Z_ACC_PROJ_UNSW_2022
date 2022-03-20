@@ -8,6 +8,12 @@ library(ggplot2)
 library(gbm)
 library(pdp)
 library(readxl)
+
+### Checks 
+
+stopifnot()
+
+
 # LINEAR REGRESSION
 
 
@@ -70,6 +76,7 @@ plot(gbm.predict[(df['League'] == "RFL")], df$Annualized_Salary[(df['League'] ==
 
 #New dataframe with correlated vairables removed + identifiable attributes
 cor_df_merge <- cbind(cor_df,df[,c("Player","Nation","Pos_new","League","Squad")])
+stopifnot((nrow(cor_df_merge) == 5500) && (length(colnames(cor_df_merge))== 23)) # Added check
 
 #MF model
 gbmFit.param_MF <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
