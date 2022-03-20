@@ -256,13 +256,10 @@ mean(gbm.match.predict[247:492])
 
 
 # Raritian players updated table ------------------------------------------
-<<<<<<< HEAD
 gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
 column.names <- c('Player','Annualized_Salary','Expected_Salary', 'Pos_new', 'Salary_Ratio')
-=======
+
 # gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
-column.names <- c('Player','Annualized_Salary','Expected_Salary','Salary_Ratio')
->>>>>>> 8b042a654e61b29b82fad037181f575f962508a1
 player.names <- cor_df_merge[,c('Player','Annualized_Salary','Pos_new','Nation')]
 
 #Field players
