@@ -137,7 +137,6 @@ hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], br
 plot(gbm.predict_FW[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")])
 plot(gbm.predict_FW[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")])
 
-
 #GK model
 gbmFit.param_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-c(16,17,18,19,20)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_GK
@@ -343,27 +342,80 @@ national.team.matchups <- cbind(national.team.matchups, Probs = national.team.pr
 
 #Our team vs [18,23],[12,17],[6,11],[1,5]
 
-probs_first_matchup <- national.team.matchups[floor(runif(10000, min = 18, max = 24)),"Probs"]
-outcome_first_matchup <- c()
-
-for (i in 1:10000) {
-    outcome_first_matchup[i] <- rbinom(1, 1, probs_first_matchup[i])
+set.seed(1)
+#Probability that our team is in the top 10 at least once within 5 years
+prob_top10_5yrs <- c()
+for (i in 1:1000) {
+    #successful outcome
+    sim_counter <- 0
+    #Calculate a single probability
+    for (j in 1:1000) {
+        win_two_match_prob <- national.team.matchups[floor(runif(5, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(5, min = 12, max = 17)),"Probs"]
+        #How many times I become top 10 in 5 yrs
+        count <- 0
+        
+        for (k in 1:5) {
+            count <- count + rbinom(1, 1, win_two_match_prob[k])
+        }
+        
+        if (count >= 1) {
+            sim_counter <- sim_counter + 1
+        }
+    }
+    
+    prob_top10_5yrs[i] <- sim_counter/1000
 }
+hist(prob_top10_5yrs)
 
-sum(outcome_first_matchup)/10000
+set.seed(1)
+#Probability that our team is in the top 10 for the majority of the time within 5 years
+prob_top10_5yrs_majority <- c()
+for (i in 1:1000) {
+    #successful outcome
+    sim_counter <- 0
+    #Calculate a single probability
+    for (j in 1:1000) {
+        win_two_match_prob <- national.team.matchups[floor(runif(5, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(5, min = 12, max = 18)),"Probs"]
+        #How many times I become top 10 in 5 yrs
+        count <- 0
+        
+        for (k in 1:5) {
+            count <- count + rbinom(1, 1, win_two_match_prob[k])
+        }
+        
+        if (count >= 3) {
+            sim_counter <- sim_counter + 1
+        }
+    }
     
- 
+    prob_top10_5yrs_majority[i] <- sim_counter/1000
+}
+hist(prob_top10_5yrs_majority)
+
+set.seed(1)
+#Probability that our team wins the championship at least once within 10 years
+prob_win_10yrs <- c()
+for (i in 1:1000) {
+    #successful outcome
+    sim_counter <- 0
+    #Calculate a single probability
+    for (j in 1:1000) {
+        win_prob <- national.team.matchups[floor(runif(10, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(10, min = 12, max = 18)),"Probs"]*national.team.matchups[floor(runif(10, min = 6, max = 12)),"Probs"]*national.team.matchups[floor(runif(10, min = 1, max = 6)),"Probs"]
+        #How many times I become top 10 in 5 yrs
+        count <- 0
+        
+        for (k in 1:10) {
+            count <- count + rbinom(1, 1, win_prob[k])
+        }
+        
+        if (count >= 1) {
+            sim_counter <- sim_counter + 1
+        }
+    }
     
-    
-
-
-# 1 vs (2 or 3)// 1 vs (4 or 5)// 1 vs 6,7,8, or 9, 1 vs 
-#Pr(At least one win) -> mess around with this probability to be convincing
-
-#Pick a bunch of players that we look at data and say "that might be economical" -> score -> spit out probability -> threshold for our object
-
-
-
+    prob_win_10yrs[i] <- sim_counter/1000
+}
+hist(prob_win_10yrs)
 
 
 #Cost of league (player salaries) - ECON model
