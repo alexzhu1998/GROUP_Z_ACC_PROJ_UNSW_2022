@@ -287,7 +287,7 @@ rarita.df <- rarita.players %>%
 
 rarita.fw <- rarita.players %>%
     filter(Pos_new == 'FW') %>%
-    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary)
+    filter(quantile(Annualized_Salary, select.quantile) < Annualized_Salary) %>%
     select(Player, Annualized_Salary, gbm.predict_FW, Pos_new)%>%
     mutate(salary.ratio = gbm.predict_FW/Annualized_Salary)%>%
     arrange(desc(salary.ratio))
