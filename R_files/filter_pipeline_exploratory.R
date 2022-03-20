@@ -44,7 +44,7 @@ cor_df <- df[,c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
 stopifnot(dim(cor_df) == c(5500,18))
 
 gk_df <- PLAYER_league_goal_salary[,c('Age','Playing_Time_90s','Performance_GA90','Performance_Saves','Performance_Save%','W','D','L','Performance_CS','Performance_CS%','Penalty_Kicks_PKA','Penalty_Kicks_PKsv','Penalty_Kicks_PKm','Penalty_Kicks_Save%','Annualized_Salary','Player','Nation','League','Squad','Country')]
-stopifnot(dim(gk_df) == c(5500,18))
+stopifnot(dim(gk_df) == c(413,20))
 
 player_tourn_df <- PLAYER_tourn_non_goal[,keep_player[!keep_player == 'Annualized_Salary']]
 gk_tourn_df <- PLAYER_tourn_goal[keep_goal[!keep_goal == 'Annualized_Salary']]
