@@ -244,15 +244,6 @@ mean(gbm.match.predict[247:492])
 
 
 
-#PREDICT SALARY FROM PPL IN THE TOURNAMENT USING predict
-#Group by tournament team, average salary for each role (FW, MF, DF, GK score, overall average sal) (relo between scores and placement - classification model)
-#Either clasify ranks directly, 1 beats 2,3,4,5 -> Response Win/Loss (these attributes beat other attributes -> "Win" -> 60% chance of win
-
-# 1 vs (2 or 3)// 1 vs (4 or 5)// 1 vs 6,7,8, or 9, 1 vs 
-#Pr(At least one win) -> mess around with this probability to be convincing
-
-#Pick a bunch of players that we look at data and say "that might be economical" -> score -> spit out probability -> threshold for our object
-
 
 
 # Raritian players updated table ------------------------------------------
@@ -349,6 +340,31 @@ national.team.matchups <- read.csv("data/match_model_data_rarita.csv")
 national.team.predict = predict(gbm_match, newdata = national.team.matchups[,-c(1,2)], n.trees = min_match_param, type = "response")
 
 national.team.matchups <- cbind(national.team.matchups, Probs = national.team.predict)
+
+#Our team vs [18,23],[12,17],[6,11],[1,5]
+
+probs_first_matchup <- national.team.matchups[floor(runif(10000, min = 18, max = 24)),"Probs"]
+outcome_first_matchup <- c()
+
+for (i in 1:10000) {
+    outcome_first_matchup[i] <- rbinom(1, 1, probs_first_matchup[i])
+}
+
+sum(outcome_first_matchup)/10000
+    
+ 
+    
+    
+
+
+# 1 vs (2 or 3)// 1 vs (4 or 5)// 1 vs 6,7,8, or 9, 1 vs 
+#Pr(At least one win) -> mess around with this probability to be convincing
+
+#Pick a bunch of players that we look at data and say "that might be economical" -> score -> spit out probability -> threshold for our object
+
+
+
+
 
 #Cost of league (player salaries) - ECON model
 sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
