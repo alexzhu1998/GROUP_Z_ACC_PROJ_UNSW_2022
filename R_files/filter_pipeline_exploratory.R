@@ -57,4 +57,5 @@ rm(list= ls()[! (ls() %in% c('df',
                              'RFL',
                              'cor_df',
                              'gk_df',
-                             'gk_tourn_df'))])
+                             'gk_tourn_df',
+                             'cor_tourn_merge'))])

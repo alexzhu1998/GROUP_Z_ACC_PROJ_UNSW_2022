@@ -49,7 +49,7 @@ FW_RFL %>% arrange(Diff,descending = T)
 set.seed(1)
 colnames(df)[c(1,2,3,4,5,71)]
 
-gbmFit.param <- gbm(Annualized_Salary ~., data = df[df['League'] != "RFL",-c(1,2,3,4,5,71)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param <- gbm(Annualized_Salary ~., data = df[df['League'] != "RFL",-c(1,2,3,4,5,71)], distribution = "gaussian", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param
 
 min <- which.min(gbmFit.param$cv.error)
@@ -66,11 +66,14 @@ gbm.predict = predict(gbmFit, newdata = df[,-c(1,2,3,4,5,70,71)], n.trees = min,
 plot(gbm.predict[(df['League'] != "RFL")], df$Annualized_Salary[(df['League'] != "RFL")])
 plot(gbm.predict[(df['League'] == "RFL")], df$Annualized_Salary[(df['League'] == "RFL")])
 
+plot(gbm.predict[(df['Nation'] != "Rarita")], df$Annualized_Salary[(df['Nation'] != "Rarita")])
+plot(gbm.predict[(df['Nation'] == "Rarita")], df$Annualized_Salary[(df['Nation'] == "Rarita")])
+
 #New dataframe with correlated vairables removed + identifiable attributes
 cor_df_merge <- cbind(cor_df,df[,c("Player","Nation","Pos_new","League","Squad")])
 stopifnot((nrow(cor_df_merge) == 5500) && (length(colnames(cor_df_merge))== 23)) # Added check 
 #MF model
-gbmFit.param_MF <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param_MF <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_MF
 
 min_MF <- which.min(gbmFit.param_MF$cv.error)
@@ -92,7 +95,7 @@ plot(gbm.predict_MF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF")]
 colnames(cor_df_merge)[c(17,19,20,21,22,23)]
 
 #DF model
-gbmFit.param_DF <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param_DF <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_DF
 
 min_DF <- which.min(gbmFit.param_DF$cv.error)
@@ -113,7 +116,7 @@ plot(gbm.predict_MF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")]
 plot(gbm.predict_MF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")])
 
 #FW model
-gbmFit.param_FW <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param_FW <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_FW
 
 min_FW <- which.min(gbmFit.param_FW$cv.error)
@@ -134,7 +137,7 @@ plot(gbm.predict_FW[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")]
 plot(gbm.predict_FW[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")])
 
 #GK model
-gbmFit.param_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-c(16,17,18,19,20)], distribution = "gaussian", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmFit.param_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-c(16,17,18,19,20)], distribution = "gaussian", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_GK
 
 min_GK <- which.min(gbmFit.param_GK$cv.error)
@@ -166,7 +169,7 @@ gbm.tourn_DF = predict(gbmFit_DF, newdata = cor_tourn_merge[,-c(17,19,20,21,22,2
 gbm.tourn_FW = predict(gbmFit_FW, newdata = cor_tourn_merge[,-c(17,19,20,21,22,23)], n.trees = min_FW, type = "response")
 gbm.tourn_GK = predict(gbmFit_GK, newdata = gk_tourn_df[,-c(1,2,3,4)], n.trees = min_GK, type = "response")
 
-MF_tourn <- cbind(cor_tourn_merge[,c(19,20,21)], gbm.tourn_MF)
+MF_tourn <- cbind(select(cor_tourn_merge, c('Player','Nation','Pos_new')), gbm.tourn_MF)
 MF_tourn_df <- MF_tourn %>%
     filter(Pos_new == "MF")
 
@@ -175,7 +178,7 @@ MF_stats <- MF_tourn_df %>%
     summarise(MF_Score = mean(gbm.tourn_MF))
 MF_stats %>% arrange(MF_Score,descending = T)
 
-DF_tourn <- cbind(cor_tourn_merge[,c(19,20,21)], gbm.tourn_DF)
+DF_tourn <- cbind(select(cor_tourn_merge, c('Player','Nation','Pos_new')), gbm.tourn_DF)
 DF_tourn_df <- DF_tourn %>%
     filter(Pos_new == "DF")
 
@@ -184,7 +187,7 @@ DF_stats <- DF_tourn_df %>%
     summarise(DF_Score = mean(gbm.tourn_DF))
 DF_stats %>% arrange(DF_Score,descending = T)
 
-FW_tourn <- cbind(cor_tourn_merge[,c(19,20,21)], gbm.tourn_FW)
+FW_tourn <- cbind(select(cor_tourn_merge, c('Player','Nation','Pos_new')), gbm.tourn_FW)
 FW_tourn_df <- FW_tourn %>%
     filter(Pos_new == "FW")
 
@@ -218,11 +221,15 @@ model_data$Outcome <- as.numeric(model_data$Outcome)
 summary(model_data)
 model_data <- as.data.frame(model_data)
 
-summary(model_data[,-c(2,3,4,5)])
+summary(select(model_data, -c("Rank_A","Rank_B","Name_A","Name_B")))
+
+glm_mod <- glm(Outcome ~ ., data = select(model_data, -c("Rank_A","Rank_B","Name_A","Name_B")), family = binomial())
+summary(glm_mod)
 
 #Fit gradient booster to link scores with match outcomes
-gbmMatch_param <- gbm(Outcome ~., data = model_data[,-c(2,3,4,5)], distribution = "bernoulli", cv.fold = 10, n.trees = 10000, interaction.depth = 1, shrinkage = 0.01)
+gbmMatch_param <- gbm(Outcome ~., data = model_data[,-c(2,3,4,5)], distribution = "bernoulli", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
 gbmMatch_param
+
 
 min_match_param <- which.min(gbmMatch_param$cv.error)
 min_match_param

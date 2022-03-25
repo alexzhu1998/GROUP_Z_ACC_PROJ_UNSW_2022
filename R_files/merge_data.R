@@ -217,7 +217,8 @@ ori_col_CTM <-c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
 rm(list= ls()[! (ls() %in% c('PLAYER_tourn_goal',
                              'PLAYER_tourn_non_goal',
                              'PLAYER_league_non_goal_salary',
-                             'PLAYER_league_goal_salary'))])
+                             'PLAYER_league_goal_salary',
+                             'cor_tourn_merge'))])
 
 # save(PLAYER_tourn_goal,PLAYER_tourn_non_goal, file = "data/merged_tourn.RData")
 # save(PLAYER_league_non_goal_salary,PLAYER_league_goal_salary, file = "data/merged_league.RData")
