@@ -404,7 +404,7 @@ for (i in 1:1000) {
     #Calculate a single probability
     for (j in 1:1000) {
         win_prob <- national.team.matchups[floor(runif(10, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(10, min = 12, max = 18)),"Probs"]*national.team.matchups[floor(runif(10, min = 6, max = 12)),"Probs"]*national.team.matchups[floor(runif(10, min = 1, max = 6)),"Probs"]
-        #How many times I become top 10 in 5 yrs
+        #How many times I win
         count <- 0
         
         for (k in 1:10) {
@@ -419,6 +419,57 @@ for (i in 1:1000) {
     prob_win_10yrs[i] <- sim_counter/1000
 }
 hist(prob_win_10yrs)
+
+#Probability thresholds over time - monitoring performance for the at least one win within 10 years
+set.seed(1)
+prob_win_10yrs_benchmark <- c()
+for (i in 1:10) {
+    sim_counter <- 0
+    #Calculate a single probability benchmark
+    for (j in 1:1000) {
+        win_prob <- national.team.matchups[floor(runif(i, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(i, min = 12, max = 18)),"Probs"]*national.team.matchups[floor(runif(i, min = 6, max = 12)),"Probs"]*national.team.matchups[floor(runif(i, min = 1, max = 6)),"Probs"]
+        #How many times I win
+        count <- 0
+        
+        for (k in 1:i) {
+            count <- count + rbinom(1, 1, win_prob[k])
+        }
+        
+        if (count >= 1) {
+            sim_counter <- sim_counter + 1
+        }
+    } 
+    prob_win_10yrs_benchmark[i] <- sim_counter/1000
+}
+
+prob_win_10yrs_benchmark <- prob_win_10yrs_benchmark - 0.042
+
+
+
+#Probability thresholds over time - monitoring performance for the at least one top 10 within 5 years
+set.seed(1)
+prob_top10_5yrs_benchmark <- c()
+for (i in 1:5) {
+    sim_counter <- 0
+    #Calculate a single probability benchmark
+    for (j in 1:1000) {
+        win_prob <- national.team.matchups[floor(runif(i, min = 18, max = 24)),"Probs"]*national.team.matchups[floor(runif(i, min = 12, max = 18)),"Probs"]
+        #How many times I become top 10 in 5 yrs
+        count <- 0
+        
+        for (k in 1:i) {
+            count <- count + rbinom(1, 1, win_prob[k])
+        }
+        
+        if (count >= 1) {
+            sim_counter <- sim_counter + 1
+        }
+    } 
+    prob_top10_5yrs_benchmark[i] <- sim_counter/1000
+}
+
+prob_top10_5yrs_benchmark <- prob_top10_5yrs_benchmark - 0.058 
+
 
 
 #Cost of league (player salaries) - ECON model
