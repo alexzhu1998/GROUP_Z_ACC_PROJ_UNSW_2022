@@ -111,6 +111,13 @@ get.cutoff <- function(kpis, position, data, percentile) {
     
 }
 
+ggplot(PLAYER_league_non_goal_salary, aes(x = PLAYER_league_non_goal_salary$League, 
+                                          y = PLAYER_league_non_goal_salary$Annualized_Salary))+
+    geom_boxplot()+
+    theme_bw()+
+    scale_y_continuous(labels = scales::dollar)+
+    labs(title = "Boxplot of Annualized Salary Split per League",
+         x= "League", y = "Annualized Salary")
 
 make.histogram(fw.kpi, 'FW',PLAYER_league_non_goal_salary, graph.path)
 make.histogram(df.kpi, 'DF',PLAYER_league_non_goal_salary, graph.path)
