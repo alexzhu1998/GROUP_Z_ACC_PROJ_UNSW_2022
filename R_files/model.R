@@ -215,8 +215,11 @@ plot(team_stats$`2021 Tournament Place`, team_stats$DF_score)
 
 model_data <- read.csv("data/match_model.csv")
 
-model_data$Outcome[model_data$Outcome == "Win"] <- 1
-model_data$Outcome[model_data$Outcome == "Lose"] <- 0
+model_data$Outcome <-ifelse(model_data$Outcome == 'Win',1,0)
+
+
+#model_data$Outcome[model_data$Outcome == "Win"] <- 1
+#model_data$Outcome[model_data$Outcome == "Lose"] <- 0
 model_data$Outcome <- as.numeric(model_data$Outcome)
 summary(model_data)
 model_data <- as.data.frame(model_data)
