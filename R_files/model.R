@@ -445,7 +445,8 @@ for (i in 1:10) {
     prob_win_10yrs_benchmark[i] <- sim_counter/1000
 }
 
-prob_win_10yrs_benchmark <- prob_win_10yrs_benchmark - 0.042
+prob_win_10yrs_benchmark <- prob_win_10yrs_benchmark - (prob_win_10yrs_benchmark[10]-0.7)
+
 
 
 
@@ -471,10 +472,48 @@ for (i in 1:5) {
     prob_top10_5yrs_benchmark[i] <- sim_counter/1000
 }
 
-prob_top10_5yrs_benchmark <- prob_top10_5yrs_benchmark - 0.058 
+prob_top10_5yrs_benchmark <- prob_top10_5yrs_benchmark - (prob_top10_5yrs_benchmark[5]-0.85)
+
+
+ten.year.bm <- data.frame(x = seq(2022,2031),
+                           y = sort(prob_win_10yrs_benchmark, TRUE))
+
+five.year.bm <- data.frame(x = seq(2022,2026),
+                           y = sort(prob_top10_5yrs_benchmark, TRUE))
+
+#Set xend and yend
+ten.year.bm$xend <- seq(2023,2032)
+ten.year.bm$yend <- ten.year.bm$y
+
+five.year.bm$xend <- seq(2023,2027)
+five.year.bm$yend <- five.year.bm$y
+
+ggplot(ten.year.bm)+
+    geom_segment(aes(x = x, y = y, xend = xend, yend = yend))+
+    labs(title = "Competitive Benchmark for Winning in 10 Years", x = "Year", y = "Probability")+
+    scale_y_continuous(breaks = seq(0,1,0.1), limits = c(0,1))+
+    scale_x_continuous(breaks = seq(2022,2032,1), limits = c(2022,2032))+
+    theme_bw()
+
+ggplot(five.year.bm)+
+    geom_segment(aes(x = x, y = y, xend = xend, yend = yend))+
+    labs(title = "Competitive Benchmark for Top 10 in 5 Years", x = "Year", y = "Probability")+
+    scale_y_continuous(breaks = seq(0,1,0.1), limits = c(0,1))+
+    scale_x_continuous(breaks = seq(2022,2027,1), limits = c(2022,2027))
+    theme_bw()
+
+#ggplot(benchmark.df)+
+#    geom_segment(aes(x = x, y = ten_year, xend=xend, yend = yend_ten), show.legend = TRUE)+
+#   geom_segment(aes(x = x, y = five_year, xend=xend, yend = yend_five), color = 'red', show.legend = TRUE)+
+#    labs(title = "Competitive Benchmarks", x = "Year", y = "Probability")+
+#    scale_x_continuous(breaks = seq(1,10))+
+#    scale_y_continuous(breaks = seq(0,1,0.1))
+#    theme(legend.title = "Objectives", position = "bottom")+
+#    theme_bw()
 
 
 
 #Cost of league (player salaries) - ECON model
 sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
+
 
