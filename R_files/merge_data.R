@@ -174,6 +174,10 @@ preprocessing <- function(df,ninetysec = F, position = F) {
         df <- filter(df,`90s_avg` > 0) # got rid of all negative 90s ppl
         df[vec_of_attr] <- df[vec_of_attr]/df$`90s_avg`
     }
+    
+    # KNN Imputation
+    # df <- impute.knn(as.matrix(df))
+    
     # Replaced all negative values with 0
     for (c in colnames(df))
         df[[c]] <- replace(df[[c]],which(df[[c]] <0) ,0) 
@@ -182,6 +186,8 @@ preprocessing <- function(df,ninetysec = F, position = F) {
     # Replace all NA with 0
     for (c in colnames(df))
         df[[c]] <- replace(df[[c]],which(is.na(df[[c]])) ,0) 
+    
+    
     
     return(df)
     
