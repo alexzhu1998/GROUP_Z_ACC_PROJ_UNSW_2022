@@ -115,7 +115,7 @@ ggplot(PLAYER_league_non_goal_salary, aes(x = PLAYER_league_non_goal_salary$Leag
                                           y = PLAYER_league_non_goal_salary$Annualized_Salary))+
     geom_boxplot()+
     theme_bw()+
-    labs(x = "League", y = "Annualized Salary (∂)", title = "Box Plot of Annualized Salary per League")+
+    labs(x = "League", y = "Annualised Salary (∂)", title = "Box Plot of Annualized Salary per League")+
     theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))+
     scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
 

@@ -374,6 +374,19 @@ for (i in 1:1000) {
 }
 hist(prob_top10_5yrs)
 
+prob_top10_5yrs.df <- data.frame(probs = prob_top10_5yrs)
+
+#CI of top 10
+mean(prob_top10_5yrs) - qnorm(0.975, 0, 1) * sd(prob_top10_5yrs) / sqrt(1000)
+mean(prob_top10_5yrs) + qnorm(0.975, 0, 1) * sd(prob_top10_5yrs) / sqrt(1000)
+
+
+ggplot(prob_top10_5yrs.df)+
+    geom_histogram(aes(x = probs, y = ..density..), color = "black", fill="#5662d1", bins = 30)+
+    labs(x = "Probability of attaining FSA Top 10 in 5 years", y = "Density", title = "Distribution of Simulated Probability", subtitle = "FSA Top 10 in 5 years")+
+    theme_bw() +
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=16, face = "bold"), plot.subtitle=element_text(size=13))
+
 set.seed(1)
 #Probability that our team is in the top 10 for the majority of the time within 5 years
 prob_top10_5yrs_majority <- c()
@@ -399,6 +412,8 @@ for (i in 1:1000) {
 }
 hist(prob_top10_5yrs_majority)
 
+
+
 set.seed(1)
 #Probability that our team wins the championship at least once within 10 years
 prob_win_10yrs <- c()
@@ -423,6 +438,20 @@ for (i in 1:1000) {
     prob_win_10yrs[i] <- sim_counter/1000
 }
 hist(prob_win_10yrs)
+
+#CI of winning prob
+mean(prob_win_10yrs) - qnorm(0.975, 0, 1) * sd(prob_win_10yrs) / sqrt(1000)
+mean(prob_win_10yrs) + qnorm(0.975, 0, 1) * sd(prob_win_10yrs) / sqrt(1000)
+
+prob_win_10yrs.df <- data.frame(probs = prob_win_10yrs)
+
+
+ggplot(prob_win_10yrs.df)+
+    geom_histogram(aes(x = probs, y = ..density..), color = "black", fill="#5662d1", bins = 30)+
+    labs(x = "Probability of winning FSA Championship in 10 years", y = "Density", title = "Distribution of Simulated Probability", subtitle = "FSA Championship in 10 years")+
+    theme_bw() +
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=16, face = "bold"), plot.subtitle=element_text(size=13))
+
 
 #Probability thresholds over time - monitoring performance for the at least one win within 10 years
 set.seed(1)
@@ -574,3 +603,6 @@ ggplot(GK_plot_data, aes(x = Annualised_Salary, y = Standardised_Salary)) +
     theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))+
     scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
     scale_x_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
+
+
+
