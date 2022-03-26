@@ -6,6 +6,7 @@ library(dplyr)
 library(ggplot2)
 library(gbm)
 library(pdp)
+library(ggalt)
 
 # LINEAR REGRESSION
 
@@ -516,4 +517,60 @@ ggplot(five.year.bm)+
 #Cost of league (player salaries) - ECON model
 sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
 
+#Plots for player selection
+#MF
+MF_plot_data <- data.frame(cbind(Standardised_Salary = gbm.predict_MF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "MF")], Annualised_Salary = df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "MF")]))
+MF_select <- MF_plot_data[
+    (gbm.predict_MF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "MF")]/df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "MF")]>4.4),]
 
+ggplot(MF_plot_data, aes(x = Annualised_Salary, y = Standardised_Salary)) +
+    geom_point()+
+    theme_bw()+
+    geom_smooth(method=lm, se = FALSE, formula=y~x-1)+
+    geom_encircle(data = MF_select, color = "red", size = 2, expand = 0.03)+
+    labs(x = "Annualised Salary (∂)", y = "Standardised Salary (∂)", title = "Relationship between Standardised and Annualised Salary", subtitle = "RFL MF Players")+
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))+
+    scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
+    scale_x_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
+
+#DF
+DF_plot_data <- data.frame(cbind(Standardised_Salary = gbm.predict_DF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")], Annualised_Salary = df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")]))
+DF_select <- DF_plot_data[(gbm.predict_DF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")]/df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")] > 4.35),]
+
+ggplot(DF_plot_data, aes(x = Annualised_Salary, y = Standardised_Salary)) +
+    geom_point()+
+    theme_bw()+
+    geom_smooth(method=lm, se = FALSE, formula=y~x-1)+
+    geom_encircle(data = DF_select, color = "red", size = 2, expand = 0.03)+
+    labs(x = "Annualised Salary (∂)", y = "Standardised Salary (∂)", title = "Relationship between Standardised and Annualised Salary", subtitle = "RFL DF Players")+
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))+
+    scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
+    scale_x_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
+
+#FW
+FW_plot_data <- data.frame(cbind(Standardised_Salary = gbm.predict_FW[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")], Annualised_Salary = df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")]))
+FW_select <- FW_plot_data[(gbm.predict_FW[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")]/df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")] > 4.41),]
+
+ggplot(FW_plot_data, aes(x = Annualised_Salary, y = Standardised_Salary)) +
+    geom_point()+
+    theme_bw()+
+    geom_smooth(method=lm, se = FALSE, formula=y~x-1)+
+    geom_encircle(data = FW_select, color = "red", size = 2, expand = 0.03)+
+    labs(x = "Annualised Salary (∂)", y = "Standardised Salary (∂)", title = "Relationship between Standardised and Annualised Salary", subtitle = "RFL FW Players")+
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))+
+    scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
+    scale_x_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
+
+#GK
+GK_plot_data <- data.frame(cbind(Standardised_Salary = gbm.predict_GK[(df['League'] == "RFL")], Annualised_Salary = gk_df$Annualized_Salary[(df['League'] == "RFL")]))
+GK_select <- GK_plot_data[(gbm.predict_GK[(df['League'] == "RFL")]/gk_df$Annualized_Salary[(df['League'] == "RFL")] > 1),]
+
+ggplot(GK_plot_data, aes(x = Annualised_Salary, y = Standardised_Salary)) +
+    geom_point()+
+    theme_bw()+
+    geom_smooth(method=lm, se = FALSE, formula=y~x-1)+
+    geom_encircle(data = GK_select, color = "red", size = 2, expand = 0.03)+
+    labs(x = "Annualised Salary (∂)", y = "Standardised Salary (∂)", title = "Relationship between Standardised and Annualised Salary", subtitle = "RFL GK Players")+
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))+
+    scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
+    scale_x_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))

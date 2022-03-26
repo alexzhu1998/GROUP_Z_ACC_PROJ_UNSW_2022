@@ -85,8 +85,8 @@ colnames(coeff_table)[4] <- "p_value"
 coeff_table[coeff_table[,"p_value"]<0.05,] 
 
 ## Correlation heatmap
-cormat <- cor(temp_df, method = "pearson")
-remove <- c('Total_Att','')
+# cormat <- cor(temp_df, method = "pearson")
+# remove <- c('Total_Att','')
 
 colnames(df)
 keep_player <- c('Age','Tackles_Tkl','Vs_Dribbles_Att','Pressures_%','Blocks_Sh',
@@ -113,6 +113,11 @@ cor_df <- df[,keep_player]
 # save(cor_df, file = "data/cor_df.RData")
 cormat <- cor(cor_df, method = "pearson")
 corrplot(cormat, method = "number")
+
+
+pca <- prcomp(temp_df,scale = T)
+sd <- pca$sdev/sum(pca$sdev)
+autoplot(pca,loadings = T)
 
 #Goalkeeper corrmat
 temp_df <- PLAYER_league_goal_salary%>% select(-c("Player","Nation","League","Squad","Pos_new",
