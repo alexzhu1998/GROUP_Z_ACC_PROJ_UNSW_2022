@@ -139,7 +139,7 @@ PLAYER_tourn_goal <- left_join(x = PLAYER_tourn_goal,
 #### Data Preprocessing ####
 
 
-preprocessing <- function(df,ninetysec = F, position = F) {
+preprocessing <- function(df,ninetysec = F, position = F, knn = F) {
     colnames(df) <- gsub(" ","_", colnames(df))
     
     if (length(unique(df$Pos)) > 1) {
@@ -176,8 +176,9 @@ preprocessing <- function(df,ninetysec = F, position = F) {
     }
     
     # KNN Imputation
-    # df <- impute.knn(as.matrix(df))
-    
+    if (knn) {
+        df <- impute.knn(as.matrix(df))
+    }
     # Replaced all negative values with 0
     for (c in colnames(df))
         df[[c]] <- replace(df[[c]],which(df[[c]] <0) ,0) 
