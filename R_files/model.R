@@ -499,7 +499,7 @@ ggplot(five.year.bm)+
     geom_segment(aes(x = x, y = y, xend = xend, yend = yend))+
     labs(title = "Competitive Benchmark for Top 10 in 5 Years", x = "Year", y = "Probability")+
     scale_y_continuous(breaks = seq(0,1,0.1), limits = c(0,1))+
-    scale_x_continuous(breaks = seq(2022,2027,1), limits = c(2022,2027))
+    scale_x_continuous(breaks = seq(2022,2027,1), limits = c(2022,2027))+
     theme_bw()
 
 #ggplot(benchmark.df)+
