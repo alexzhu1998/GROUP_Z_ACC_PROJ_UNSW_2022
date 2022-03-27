@@ -320,6 +320,8 @@ national.team <- rbind(national.team, rarita.mf[1:7,])
 national.team <- rbind(national.team, rarita.fw[1:5,])
 
 
+
+
 #PDP graphs
 par.df.DF <- partial(gbmFit_DF, pred.var = c('Expected_xG'), n.trees = min_DF)
 par.df.DF <- partial(gbmFit_DF, pred.var = c('xA'), n.trees = min_DF)
@@ -522,18 +524,24 @@ five.year.bm$xend <- seq(2023,2027)
 five.year.bm$yend <- five.year.bm$y
 
 ggplot(ten.year.bm)+
-    geom_segment(aes(x = x, y = y, xend = xend, yend = yend))+
-    labs(title = "Competitive Benchmark for Winning in 10 Years", x = "Year", y = "Probability")+
+    geom_segment(aes(x = x, y = y, xend = xend, yend = yend), color = 'royalblue', cex = 1)+
+    labs(title = "Competitive Benchmark Probabilities", subtitle = 'Probability of Winning FSA over remaining years',
+         x = "Current Year", y = "Probability")+
     scale_y_continuous(breaks = seq(0,1,0.1), limits = c(0,1))+
     scale_x_continuous(breaks = seq(2022,2032,1), limits = c(2022,2032))+
-    theme_bw()
+    theme_bw()+
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))
+    
 
 ggplot(five.year.bm)+
-    geom_segment(aes(x = x, y = y, xend = xend, yend = yend))+
-    labs(title = "Competitive Benchmark for Top 10 in 5 Years", x = "Year", y = "Probability")+
+    geom_segment(aes(x = x, y = y, xend = xend, yend = yend), color = 'royalblue', cex = 1)+
+    labs(title = "Competitive Benchmark Probabilities", subtitle = 'Probability of Placing in the Top 10 over remaining years',
+         x = "Current Year", y = "Probability")+
     scale_y_continuous(breaks = seq(0,1,0.1), limits = c(0,1))+
     scale_x_continuous(breaks = seq(2022,2027,1), limits = c(2022,2027))+
-    theme_bw()
+    theme_bw()+
+    theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))
+    
 
 #ggplot(benchmark.df)+
 #    geom_segment(aes(x = x, y = ten_year, xend=xend, yend = yend_ten), show.legend = TRUE)+
