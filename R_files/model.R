@@ -33,9 +33,9 @@ for (level in pos_levels) {
     
 }
 
-sqrt(sum(FW_nonRFL_mod$residuals^2))
-sqrt(sum(DF_nonRFL_mod$residuals^2)
-sum(MF_nonRFL_mod$residuals^2)
+sqrt(mean(FW_nonRFL_mod$residuals^2))
+sqrt(mean(DF_nonRFL_mod$residuals^2))
+sqrt(mean(MF_nonRFL_mod$residuals^2))
 
 plot(MF_RFL$Annualized_Salary,MF_RFL$Predicted_Sal, main= "MF RFL")
 plot(DF_RFL$Annualized_Salary,DF_RFL$Predicted_Sal, main= "DF RFL")
