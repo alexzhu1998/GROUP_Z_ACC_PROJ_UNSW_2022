@@ -33,9 +33,9 @@ for (level in pos_levels) {
     
 }
 
-sqrt(sum(FW_nonRFL_mod$residuals^2))
-sqrt(sum(DF_nonRFL_mod$residuals^2)
-sum(MF_nonRFL_mod$residuals^2)
+mean(FW_nonRFL_mod$residuals^2)
+mean((DF_nonRFL_mod$residuals^2))
+mean(MF_nonRFL_mod$residuals^2)
 
 plot(MF_RFL$Annualized_Salary,MF_RFL$Predicted_Sal, main= "MF RFL")
 plot(DF_RFL$Annualized_Salary,DF_RFL$Predicted_Sal, main= "DF RFL")
@@ -98,6 +98,8 @@ plot(gbm.predict_MF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF")]
 
 colnames(cor_df_merge)[c(17,19,20,21,22,23)]
 
+mean((gbm.predict_MF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF")]-df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "MF")])^2)
+
 #DF model
 gbmFit.param_DF <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_DF
@@ -116,8 +118,10 @@ gbm.predict_DF = predict(gbmFit_DF, newdata = cor_df_merge[,-c(17, 19,20,21,22,2
 hist(gbm.predict_DF[(cor_df_merge['Pos_new'] == "DF") & (df['League'] != "RFL")])
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "DF")], breaks = 20)
 
-plot(gbm.predict_MF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")], df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")])
-plot(gbm.predict_MF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")])
+plot(gbm.predict_DF[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")], df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "DF")])
+plot(gbm.predict_DF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")])
+
+mean((gbm.predict_DF[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")]-df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "DF")])^2)
 
 #FW model
 gbmFit.param_FW <- gbm(Annualized_Salary ~., data = cor_df_merge[(cor_df_merge['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW"),-c(19,20,21,22,23)], distribution = "gaussian", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
@@ -140,6 +144,8 @@ hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "FW")], br
 plot(gbm.predict_FW[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] == "RFL") & (cor_df_merge['Pos_new'] == "FW")])
 plot(gbm.predict_FW[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")], df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")])
 
+mean((gbm.predict_FW[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")]-df$Annualized_Salary[(df['League'] != "RFL") & (cor_df_merge['Pos_new'] == "FW")])^2)
+
 #GK model
 gbmFit.param_GK <- gbm(Annualized_Salary ~., data = gk_df[(gk_df['League'] != "RFL"),-c(16,17,18,19,20)], distribution = "gaussian", cv.fold = 10, n.trees = 3000, interaction.depth = 1, shrinkage = 0.01)
 gbmFit.param_GK
@@ -154,10 +160,10 @@ summary(gbmFit_GK)
 gbm.predict_GK = predict(gbmFit_GK, newdata = gk_df[,-c(15,16,17,18,19,20)], n.trees = min_GK, type = "response")
 
 #Comparing actual vs expected in GK model
-plot(gbm.predict_GK[(df['League'] == "RFL")], gk_df$Annualized_Salary[(df['League'] == "RFL")])
-plot(gbm.predict_GK[(df['League'] != "RFL")], gk_df$Annualized_Salary[(df['League'] != "RFL")])
+plot(gbm.predict_GK[(gk_df['League'] == "RFL")], gk_df$Annualized_Salary[(gk_df['League'] == "RFL")])
+plot(gbm.predict_GK[(gk_df['League'] != "RFL")], gk_df$Annualized_Salary[(gk_df['League'] != "RFL")])
 
-
+mean((gbm.predict_GK[(gk_df['League'] != "RFL")]-gk_df$Annualized_Salary[(gk_df['League'] != "RFL")])^2)
 
 #Actual salary histograms
 hist(df$Annualized_Salary[(df['League'] != "RFL") & (df['Pos_new'] == "DF")], breaks = 20)
