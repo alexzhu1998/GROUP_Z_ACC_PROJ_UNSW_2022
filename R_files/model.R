@@ -265,7 +265,7 @@ mean(gbm.match.predict[247:492])
 
 # Raritian players updated table ------------------------------------------
 column.names <- c('Player','Annualized_Salary','Expected_Salary', 'Pos_new', 'Salary_Ratio')
-select.quantile <- 0.75
+select.quantile <- 0
 
 # gbm.vector <- c(gbm.predict_DF,gbm.predict_FW,gbm.predict_GK,gbm.predict_MF)
 player.names <- cor_df_merge[,c('Player','Annualized_Salary','Pos_new','Nation')]
@@ -346,6 +346,7 @@ national.team.stats <- national.team %>%
 
 
 national.team.stats[1,2]*1/11+ national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + national.team.stats[4,2]*2/11
+15151245*1/11+ 19606225*4/11 + 22892307*4/11 + 24088798*2/11
 
 
 final.national.team <- national.team.stats%>%
@@ -353,7 +354,7 @@ final.national.team <- national.team.stats%>%
                                         + national.team.stats[2,2]*4/11 + national.team.stats[3,2]*4/11 + 
                                             national.team.stats[4,2]*2/11))
 
-national.team.matchups <- read.csv("data/match_model_data_rarita.csv")
+national.team.matchups <- read.csv("data/bad_team.csv")
 
 
 national.team.predict = predict(gbm_match, newdata = national.team.matchups[,-c(1,2)], n.trees = min_match_param, type = "response")
