@@ -8,13 +8,12 @@ output:
 ---
 
 # Actuarial Theory and Practice A Assignment
+By Aidan Yeoh, Alex Zhu, Annie Zhu, Matthew Winfred, Rosie Tao
 
-```{r setup, include = FALSE}
-source("R_files/Annie's preprocessing.R")
-source("R_files/filter_pipeline_exploratory.R")
-PLAYER_tourn_res_2020 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "B11:C27")
-PLAYER_tourn_res_2021 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "E11:F35")
-```
+1. Data Cleaning Steps
+2. Modelling Steps
+3. Economic Impact Steps
+4. Conclusion
 
 ```{r library, include = FALSE}
 library(dplyr)
@@ -24,8 +23,14 @@ library(pdp)
 library(ggalt)
 ```
 
+```{r setup, include = FALSE}
+source("R_files/Annie's preprocessing.R")
+source("R_files/filter_pipeline_exploratory.R")
+PLAYER_tourn_res_2020 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "B11:C27")
+PLAYER_tourn_res_2021 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "E11:F35")
+```
 
-```{r models, eval = FALSE}
+```{r linear_regression_models}
 # LINEAR REGRESSION
 
 cols_to_remove <- c("Pos_new","Player","Nation","League","Squad")
@@ -60,7 +65,9 @@ mean(MF_nonRFL_mod$residuals^2)
 plot(MF_RFL$Annualized_Salary,MF_RFL$Predicted_Sal, main= "MF RFL")
 plot(DF_RFL$Annualized_Salary,DF_RFL$Predicted_Sal, main= "DF RFL")
 plot(FW_RFL$Annualized_Salary,FW_RFL$Predicted_Sal, main= "FW RFL")
+```
 
+```{r gbms, eval = FALSE}
 
 MF_RFL %>% arrange(Diff,descending = T)
 DF_RFL %>% arrange(Diff,descending = T)
@@ -242,7 +249,9 @@ team_stats <- team_stats %>% arrange(`2021 Tournament Place`, descending = T)
 plot(team_stats$`2021 Tournament Place`, team_stats$DF_score)
 
 # write.csv(team_stats,"data/match_model_data.csv")
+```
 
+```{r simulate_matches, eval = FALSE}
 model_data <- read.csv("data/match_model.csv")
 
 model_data$Outcome <-ifelse(model_data$Outcome == 'Win',1,0)

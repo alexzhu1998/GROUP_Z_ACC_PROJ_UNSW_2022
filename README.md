@@ -1,5 +1,12 @@
 # Actuarial Theory and Practice A Assignment
 
+By Aidan Yeoh, Alex Zhu, Annie Zhu, Matthew Winfred, Rosie Tao
+
+1.  Data Cleaning Steps
+2.  Modelling Steps
+3.  Economic Impact Steps
+4.  Conclusion
+
 ``` r
 # LINEAR REGRESSION
 
@@ -25,18 +32,50 @@ for (level in pos_levels) {
     
     
 }
+```
 
+    ## Note: Using an external vector in selections is ambiguous.
+    ## ℹ Use `all_of(cols_to_remove)` instead of `cols_to_remove` to silence this message.
+    ## ℹ See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
+    ## This message is displayed once per session.
 
+``` r
 mean(FW_nonRFL_mod$residuals^2)
+```
+
+    ## [1] 2.946836e+13
+
+``` r
 mean((DF_nonRFL_mod$residuals^2))
+```
+
+    ## [1] 2.483974e+13
+
+``` r
 mean(MF_nonRFL_mod$residuals^2)
+```
 
+    ## [1] 3.381205e+13
 
+``` r
 plot(MF_RFL$Annualized_Salary,MF_RFL$Predicted_Sal, main= "MF RFL")
+```
+
+![](README_files/figure-markdown_github/linear_regression_models-1.png)
+
+``` r
 plot(DF_RFL$Annualized_Salary,DF_RFL$Predicted_Sal, main= "DF RFL")
+```
+
+![](README_files/figure-markdown_github/linear_regression_models-2.png)
+
+``` r
 plot(FW_RFL$Annualized_Salary,FW_RFL$Predicted_Sal, main= "FW RFL")
+```
 
+![](README_files/figure-markdown_github/linear_regression_models-3.png)
 
+``` r
 MF_RFL %>% arrange(Diff,descending = T)
 DF_RFL %>% arrange(Diff,descending = T)
 FW_RFL %>% arrange(Diff,descending = T)
@@ -217,7 +256,9 @@ team_stats <- team_stats %>% arrange(`2021 Tournament Place`, descending = T)
 plot(team_stats$`2021 Tournament Place`, team_stats$DF_score)
 
 # write.csv(team_stats,"data/match_model_data.csv")
+```
 
+``` r
 model_data <- read.csv("data/match_model.csv")
 
 model_data$Outcome <-ifelse(model_data$Outcome == 'Win',1,0)
