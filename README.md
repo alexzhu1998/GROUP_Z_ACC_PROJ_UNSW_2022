@@ -15,9 +15,9 @@ pos_levels <- c("MF","DF","FW")
 
 for (level in pos_levels) {
     eval(call("<-",paste0(level,"_nonRFL"),
-              nonRFL %>% filter(Pos_new == level) %>% select(-cols_to_remove)))
+              nonRFL %>% filter(Pos_new == level) %>% select(-all_of(cols_to_remove))))
     eval(call("<-",paste0(level,"_RFL"),
-              RFL %>% filter(Pos_new == level) %>% select(-cols_to_remove)))
+              RFL %>% filter(Pos_new == level) %>% select(-all_of(cols_to_remove))))
     eval(call("<-",paste0(level,"_nonRFL_mod"),
               glm(Annualized_Salary ~ ., data = eval(str2lang(paste0(level,"_nonRFL"))))))
     
@@ -32,14 +32,8 @@ for (level in pos_levels) {
     
     
 }
-```
 
-    ## Note: Using an external vector in selections is ambiguous.
-    ## ℹ Use `all_of(cols_to_remove)` instead of `cols_to_remove` to silence this message.
-    ## ℹ See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-    ## This message is displayed once per session.
 
-``` r
 mean(FW_nonRFL_mod$residuals^2)
 ```
 
