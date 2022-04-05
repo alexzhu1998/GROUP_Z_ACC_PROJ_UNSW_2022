@@ -1,6 +1,31 @@
+---
+title: "Markdown Source"
+author: "Aidan Yeoh, Alex Zhu, Annie Zhu, Matthew Winfred, Rosie Tao"
+date: "05/04/2022"
+output: 
+    md_document:
+        variant: markdown_github
+---
+
 # Actuarial Theory and Practice A Assignment
 
-``` r
+```{r setup, include = FALSE}
+source("R_files/Annie's preprocessing.R")
+source("R_files/filter_pipeline_exploratory.R")
+PLAYER_tourn_res_2020 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "B11:C27")
+PLAYER_tourn_res_2021 <- readxl::read_excel("data/player-modified.xlsx",sheet = "Tournament Results",range= "E11:F35")
+```
+
+```{r library, include = FALSE}
+library(dplyr)
+library(ggplot2)
+library(gbm)
+library(pdp)
+library(ggalt)
+```
+
+
+```{r models, eval = FALSE}
 # LINEAR REGRESSION
 
 cols_to_remove <- c("Pos_new","Player","Nation","League","Squad")
@@ -353,9 +378,11 @@ national.team.matchups <- read.csv("data/bad_team.csv")
 national.team.predict = predict(gbm_match, newdata = national.team.matchups[,-c(1,2)], n.trees = min_match_param, type = "response")
 
 national.team.matchups <- cbind(national.team.matchups, Probs = national.team.predict)
+
 ```
 
-``` r
+
+```{r simulations, eval = FALSE}
 #Our team vs [18,23],[12,17],[6,11],[1,5]
 
 set.seed(1)
@@ -521,7 +548,8 @@ five.year.bm <- data.frame(x = seq(2022,2026),
                            y = sort(prob_top10_5yrs_benchmark, TRUE))
 ```
 
-``` r
+```{r plots, eval = FALSE}
+
 #Set xend and yend
 ten.year.bm$xend <- seq(2023,2032)
 ten.year.bm$yend <- ten.year.bm$y
@@ -620,4 +648,6 @@ ggplot(GK_plot_data, aes(x = Annualised_Salary, y = Standardised_Salary)) +
     theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))+
     scale_y_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))+
     scale_x_continuous(labels = scales::unit_format(unit = "M", scale = 1e-6))
+
+
 ```
