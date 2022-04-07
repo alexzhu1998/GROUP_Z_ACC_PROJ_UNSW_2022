@@ -23,6 +23,9 @@ library(pdp)
 library(ggalt)
 ```
 
+
+
+
 ```{r setup, include = FALSE}
 source("R_files/Annie's preprocessing.R")
 source("R_files/filter_pipeline_exploratory.R")
@@ -585,18 +588,6 @@ ggplot(five.year.bm)+
     theme_bw()+
     theme(axis.text=element_text(size=9.5), axis.title=element_text(size=13, face = "bold"), plot.title = element_text(size=14, face = "bold"))
     
-
-#ggplot(benchmark.df)+
-#    geom_segment(aes(x = x, y = ten_year, xend=xend, yend = yend_ten), show.legend = TRUE)+
-#   geom_segment(aes(x = x, y = five_year, xend=xend, yend = yend_five), color = 'red', show.legend = TRUE)+
-#    labs(title = "Competitive Benchmarks", x = "Year", y = "Probability")+
-#    scale_x_continuous(breaks = seq(1,10))+
-#    scale_y_continuous(breaks = seq(0,1,0.1))
-#    theme(legend.title = "Objectives", position = "bottom")+
-#    theme_bw()
-
-
-
 #Cost of league (player salaries) - ECON model
 sum(cor_df$Annualized_Salary[(df$League == "RFL") & (df$Year == "2020")]) + sum(gk_df$Annualized_Salary[(gk_df$League == "RFL")])/2
 
